@@ -14,13 +14,18 @@
 
 2^(-4)
 
+#cuantas semanas hay en 725 dias
 725%/%7
 
+#cuantos días sobran
 725%%7
-# D = d * q + r
+
+#Algoritmo de Euclides
+# Dividendo(D) = divisor(d) * cociente(q) + resto (r)
 # r = D - d * q
 # q = D %/% d
-# x = D %% d 
+# r = D %% d 
+
 725 - 103*7
 
 pi

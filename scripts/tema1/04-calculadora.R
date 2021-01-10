@@ -84,9 +84,17 @@ log(4^6, 4)
 
 choose(5,2)
 
+choose(5,3)
+
 sin(60*pi/180)
 
 cos(60*pi/180)
+
+cos(0*pi/180)
+sin(0*pi/180)
+
+cos(45*pi/180)
+sin(45*pi/180)
 
 sinpi(1/2) # = sin (pi/2)
 
@@ -157,29 +165,23 @@ x = x^2
 
 x = sqrt(x)
 
-## FunciÃ³n f(x) = x^3 - (3^x)* sen(x)
-f = function(x) {
-  x^3 - (3^x) * sin(x)
-}
+## Función f(x) = x^3 - (3^x)* sen(x)
+f = function(x) {x^3 - (3^x) * sin(x)}
 
 f(4) # 4^3 - 3^4 * sin(4)
 f(5)
 f(pi/2)
 
-suma1 <- function(t){
-  t + 1
-}
+suma1 <- function(t){t + 1}
 suma1(6)
 suma1(-5)
 
-product <- function(x, y){
-  x*y
-}
+product <- function(x, y){x*y}
 product(5,7)
 
 g <- function(x,y,z) {
   exp(x^2 + y^2) * sin(z)
-}
+  }
 g(1, 2, 3)
 g(1, -1, pi)
 

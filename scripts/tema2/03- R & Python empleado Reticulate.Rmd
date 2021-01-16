@@ -1,0 +1,130 @@
+---
+title: "R & Python"
+author: "Ramon Ceballos"
+date: "14/1/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## LIBRERIA Reticulate
+
+```{r Carga librerías de Python}
+#Cargo la libreria reticulate instalada en R
+library(reticulate)
+#Con este comando cargo más de 200 librerías de python que podría usar en este script de R
+use_python("C:/Users/usuario/anaconda3/python.exe")
+#usa el comando de abajo:
+#py_install("nombre del paquete a instalar")
+#se ha importado la librería de python os a este script, guardandola en una variable
+os <- import ("os")
+#Se invoca el módulo listdir con el $ para ver los directorios que hay en el lugar en el que está guardado este script
+os$listdir(".")
+```
+
+Se pueden llamar ficheros de python (.py) en R una vez se ha cargado Reticulate en un script de R.
+
+Para poder llamar a funciones de dichos ficheros se emplea:
+
+1. Comando source_python("nombre del fichero"). Así importamos dicho fichero.
+
+Para llamar ficheros que contengan clases (librerias), se emplea el comando py_run_file ("nombre de archivo .py") para luego ejecutar el main (programa principal de una clase).
+
+```{r}
+#Se importa la libreria de Python llamada Numpy
+np <- import("numpy", convert = FALSE)
+
+x <- np$array(c(1:4))
+#Hace las sumas acumuladas del paquete numpy
+sum <- x$cumsum()
+#Da el resultado igual que en python
+print (sum)
+
+#Para obtener un resultado de R se emplea:
+py_to_r(sum)
+```
+
+## AYUDA EN R
+Comando help(function)
+Ej.: help (py_to_r)
+
+## AYUDA EN PYTHON
+Comando py_help()
+
+```{r}
+py_help(os$chdir)
+```
+
+## ARRAYS
+Se puede crear objetos Python desde R
+
+```{r}
+A <- np_array(c(1:10), dtype="float16")
+A
+```
+
+## Escribir chunk en Python
+```{python}
+import numpy as np
+import pandas as pd
+
+```
+
+## Leer datos en R y Python
+```{r}
+datos <- iris
+head (datos)
+#paso los datos de r a Python
+datos_py <- r_to_py(datos)
+
+```
+
+Los dataset de R empieza en 1 mientras que los dataset de Python empiezan en 0
+
+```{python}
+import numpy as np
+import pandas as pd
+
+r.datos_py.head()
+```
+
+## Sparse matrix
+
+Son matrices que se usan mucha y son la gran mayoria ceros salvo una posicion.
+
+Depende en R del paquete Matrix.
+
+```{r}
+library(Matrix)
+n <- 6
+set.seed(123)
+sparse_mat <- sparseMatrix(
+  i = sample(n, n, replace = F),
+  j = sample(n, n, replace = F),
+  x = runif(0:n),
+  dims = c(n,n)
+)
+sparse_mat
+
+sparse_mat_py <- r_to_py(sparse_mat)
+```
+
+Paso la variable de R a Python
+
+```{python}
+r.sparse_mat_py
+
+```
+
+Paso la variable de Python a R, pudiendo haberla modificado en Python
+
+```{r}
+py_to_r(sparse_mat_py)
+```
+
+

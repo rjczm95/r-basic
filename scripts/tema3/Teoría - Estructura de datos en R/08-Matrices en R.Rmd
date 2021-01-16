@@ -1,0 +1,15 @@
+---
+title: "Estructura de Datos en R - Matrices"
+author: "Ramon Ceballos"
+date: "16/1/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+
+

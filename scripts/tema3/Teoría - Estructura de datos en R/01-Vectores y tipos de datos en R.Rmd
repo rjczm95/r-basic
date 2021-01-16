@@ -1,0 +1,73 @@
+---
+title: "Estructura de Datos - Vectores y tipos de datos R"
+author: "Ramon Ceballos"
+date: "14/1/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 1. VECTORES
+
+Los vectores se definen como una secuencia ordenada de datos. Estos datos deben de ser del mismo tipo.
+
+Entre los tipos de datos que encontramos en R tenemos:
+
+- `logical`: lógicos (```TRUE``` o ```FALSE```)
+- `integer`: números enteros, $\mathbb Z$
+- `numeric`: números reales, $\mathbb R$
+- `complex`: números complejos, $\mathbb C$
+- `character`: palabras
+
+En los vectores de `R`, todos sus objetos han de ser del mismo tipo: todos números, todos palabras, etc. Cuando queramos usar vectores formados por objetos de diferentes tipos, tendremos que usar **listas generalizadas**, `lists` que veremos al final del tema.
+
+Si se define una lista de varios elementos, los elementos se convertirán en palabras, numeros complejos, numeros reales, numeros enteros o numero logicos (booleanos), con este orden de prioridad.
+
+Para conocer de que tipo es el vector se puede emplear **clas(vector)**.
+
+## Definir un vector en R
+
+Hay diversas estructuras que se pueden utilizar a la hora de definir un vector en R.
+
+**c ()** es la forma más sencilla para definir un vector (viene de columns).
+
+```{r Vector c(), comment=NA}
+c(1,2,3,4)
+```
+
+**scan()** también permite definir un vector. En este caso lo escanea. Sirve para copiar y pegar datos obtenidos. Se puede poner la **url** del sitio de donde queremos los datos y con scan() se pueden volcar los datos en R. Para más información utiliza **?scan**. Se hace doble intro para ejecutarla. En este caso el separador decimal es el punto por defecto, para cambiarlo usa *scan(dec=",")*.
+
+Para modificar visualmente un vector `x` se emplea **fix(x)**.
+
+```{r, fix(x)}
+x <- c(1,4,6)
+fix(x)
+```
+
+
+Para repetir el mismo elemento `n` dentro de un vector se emplea **rep (a, n)**, que contiene el dato `a`repetido `n`veces.
+
+```{r Repetir rep(a,n),comment=NA}
+rep("SK",5)
+```
+
+### Ejercicio
+
+1. Repite tu año de nacimiento 10 veces.
+
+```{r, ejercicio 1}
+rep(1995,10)
+```
+
+
+2. Crea el vector que tenga como entradas $16, 0, 1, 20, 1, 7, 88, 5, 1, 9$, llámalo vec y modifica la cuarta entrada con la función fix().
+
+```{r}
+vec <- c(16, 0, 1, 20, 1, 7, 88, 5, 1, 9)
+#fix(vec) y modificas la cuarta entrada
+```
+
+
+

@@ -1,0 +1,105 @@
+---
+title: "Estructura de datos con R - Subvectores"
+author: "Ramon Ceballos"
+date: "15/1/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Subvectores
+
+Vamos a ver diferentes notaciones que nos permiten trabajar con partes del total del vector.
+
+- ```vector[i]```: da la $i$-ésima entrada del vector
+
+	- Los índices en R empiezan en 1
+	- ```vector[length(vector)]```: nos da la última entrada del vector
+	- ```vector[a:b]```: si $a$ y $b$ son dos números naturales, nos da el subvector con las entradas del vector original que van de la posición $a$-ésima hasta la $b$-ésima.
+	- ```vector[-i]```: si $i$ es un número, este subvector está formado por todas las entradas del vector original menos la entrada $i$-ésima que hayamos dado. Si $i$ resulta ser un vector, entonces es un vector de índices y crea un nuevo vector con las entradas del vector original,cuyos índices pertenecen a $i$
+	- ```vector[-x]```: si $x$ es un vector (de índices), entonces este es el complementario de vector[$x$]
+	
+## Operadores lógicos
+
+También a la hora de acceder a posiciones podemos utilizar **operadore lógicos**:
+
+	- ```==```: =
+	- ```!=```: $\neq$
+	- ```>=```: $\ge$  
+	- ```<=```: $\le$
+	- ```<```: $<$
+	- ```>```: $>$
+	- ```!```: NO lógico
+	- ```&```: Y lógico
+	- ```|```: O lógico
+	
+```{r subvectores 1}
+v = c(14,5,6,19,32,0,8)
+#Muestra el elemento de la posición 2
+v[2]
+#Da un vector que elimina los elemntos de las posiciones 3 y 5
+v[-c(3,5)]
+#Solo apareceran en el nuevo vector los elementos distintos de 19 y mayores de 15
+v[v != 19 & v>15]
+```
+
+## Condicionales
+
+Existen las funciones which, que dado un vector x buscan los indices que cumplen cierta **condición**.
+
+- ```which(x cumple condición)```: para obtener los índices de las entradas del vector $x$ que satisfacen la condición dada
+- ```which.min(x)```: nos da la primera posición en la que el vector $x$ toma su valor mínimo
+- ```which(x==min(x))```: da todas las posiciones en las que el vector $x$ toma sus valores mínimos
+- ```which.max(x)```: nos da la primera posición en la que el vector $x$ toma su valor máximo
+- ```which(x==max(x))```: da todas las posiciones en las que el vector $x$ toma sus valores máximos
+
+### Ejemplos en chunks
+
+*Operadores lógicos*
+```{r ej oplog y cond}
+x <- seq(3, 50, by = 3.5)
+x
+#posición 8
+x[8]
+#última posición
+x[length(x)]
+#quitar nº
+x[-3]
+#nuevo vector
+x[4:9]
+#Obtener nº pares del vector
+x[seq(2,length(x),by=2)]
+#Quitar los nº pares
+x[-seq(2,length(x),by=2)]
+#Filtrar elementos
+x[c(1,3,5)]
+#elementos mayores de 30
+x[x>30]
+#elementos menores de 10 y mayores de 35
+x[x<10|x>35]
+
+#SE PUEDE FILTRAR UN VECTOR SEGUN LOS VALORES DE OTRO VECTOR
+v1 <- c(1,3,5,7)
+v2 <- c(-9,2,5,1)
+v1[v2>0]
+```
+*Condicionales*
+```{r}
+#si aplicas which directamente da las posiciones del vector
+#x[which] da el valor de las posiciones
+s <- c(2,6,9,14,-5)
+which(s>4)
+s[which(s>4)]
+s[s>4]
+#Posición del elemento más pequeño
+which.min(s) #si solo hay uno
+which(s == min(s)) #si hay varios minimos en el vectores
+
+```
+
+	

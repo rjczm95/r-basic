@@ -5,6 +5,7 @@ date: "21/12/2018"
 output:
   html_document:
     df_print: paged
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -47,6 +48,8 @@ ecuaciones en línea $S = \pi\cdot r^2$.
 
 imagen ![](../../teoria/Imgs/logo.png)
 
+Establecer barra divisoria con tres asterisco
+
 *** 
 
 Aquí empezamos otra cosa
@@ -78,5 +81,5 @@ Alumno        |   Nota    |  Edad
 --------------|-----------|--------
 Juan Gabriel  |  3.5      | 30
 Ricardo       |  5.6      | 55
-María         |  7.3      | 20
+Ramón         |  7.3      | 20
 Antonio       |  9.5      | 18

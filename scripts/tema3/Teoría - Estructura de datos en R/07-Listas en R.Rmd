@@ -1,0 +1,54 @@
+---
+title: "Estructura de datos en R - Listas"
+author: "Ramon Ceballos"
+date: "16/1/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Hasta ahora hemos trabajado con vectores, que son sucesiones de elementos de un mismo tipo. 
+
+Este problema se resuelve con las listas generalizadas o función list()
+
+# LISTAS EN R / FUNCIÓN LIST()
+
+<l class="definition">List.</l> Lista formada por diferentes objetos, no necesariamente del mismo tipo, cada cual con un nombre interno
+
+- `list(...)`: función que crea una list
+    - Para obtener una componente concreta usamos la instrucción `list$componente`
+    - También podemos indicar el objeto por su posición usando dobles corchetes: `list[[i]]`. Lo que obtendremos es una list formada por esa única componente, no el objeto que forma la componente
+
+```{r}
+#Esto sería un vector como hemos trabajado hasta ahora
+x = c(1,3,-4,6,8,13,-3)
+x
+#Crear una lista emplando además el vector anterior para algunos datos
+L = list(nombre = "Temperaturas", datos = x, media = mean(x),sumas =cumsum(x))
+L
+#Para obtener una determinada componente de la lista se emplea L$objeto
+L$datos
+#También se puede acceder por L[[posición_objeto]]
+L[[2]]
+```
+
+## Funciones para una Lista
+
+Hay dos funciones principales.
+
+- `str(list)`: para conocer la estructura interna de una list. La naturaleza de los objetos que la componen.
+- `names(list)`: para saber los nombres de la list.
+```{r}
+str(L)
+names(L)
+```
+
+
+
+
+

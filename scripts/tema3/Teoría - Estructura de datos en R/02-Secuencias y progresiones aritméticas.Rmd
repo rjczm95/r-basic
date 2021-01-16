@@ -1,0 +1,57 @@
+---
+title: "Estructura de Datos en R - Secuencias y progresiones Aritméticas"
+author: "Ramon Ceballos"
+date: "15/1/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# PROGRESIONES Y SECUENCIAS ARITMÉTICAS
+
+Una progresión aritmética es una sucesión de números tales que la **diferencia**, $d$, de cualquier par de términos sucesivos de la secuencia es constante.
+$$a_n = a_1 + (n-1)\cdot d$$
+
+## Formas de declarar una secuencia aritmética
+
+* ``seq(a,b,by=d)``: para generar una [progresión aritmética](https://es.wikipedia.org/wiki/Progresión_aritmética) de diferencia $d$ que empieza en $a$ hasta llegar a $b$. Sin no se llega al último término de la sucesión de forma exacta, el último término de la sucesión es el más próximo a $b$ que no supere el valor de $b$.
+```{r}
+seq(5,60,by=5)
+seq(3,40,by=4)
+#Secuencias en decreciente
+seq(80,10,by=-10)
+```
+
+* ```seq(a,b, length.out=n)```: define progresión aritmética de longitud $n$ que va de $a$ a $b$ con diferencia $d$. Por tanto $d=(b-a)/(n-1)$. Así se determina la longitud de la secuencia.
+```{r}
+seq(2,20,length.out = 4)
+```
+
+* ```seq(a,by=d, length.out=n)```: define la progresión aritmética de longitud $n$ y diferencia $d$ que empieza en $a$. Determina un vector con una longitud fija y una variación fija conocidas.
+```{r}
+seq(5,by=4,length.out = 5)
+#Escribir 20 primeros numeros pares
+seq(2,by=2,length.out = 20)
+```
+
+* ```a:b```: define la secuencia de números **enteros** ($\mathbb{Z}$) consecutivos entre dos números $a$ y $b$.
+```{r}
+1:10
+-2:5
+#Escribir números del 1 al 20
+1:20
+```
+
+### Ejercicio 
+
+Imprime `30` números equidistantes entre el `17` y el `98`, mostrando solo 4 cifras significativas.
+```{r}
+ej_seq <- seq(17, 98, length.out = 30)
+signif(ej_seq,4)
+```
+

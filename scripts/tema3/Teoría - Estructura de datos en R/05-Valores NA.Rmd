@@ -1,0 +1,66 @@
+---
+title: "Estructura de Datos con R - Valores NA"
+author: "Ramon Ceballos"
+date: "16/1/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# VALORES  *NA*  EN VECTORES DE R
+
+`NA` se corresponde con la expresión de un número o valor no disponible. Indica que estos valores no existen.
+
+En estadística descriptiva es muy importante ya que son valores desconocidos.
+
+```{r}
+x <- 1:10
+x[length(x) + 3] = 43
+#Se adquiere un nuevo vector que tiene valores NA
+x
+#Da como valor NA
+sum(x)
+prod(x)
+#Acumula la suma hasta llegar a valor de NA
+cumsum(x)
+```
+
+Por lo visto en el chunk de arriba los `NA` son un gran problema a la hora de poder trabajar con vectores.
+
+Para evitar este problema se debe de indicar dentro de la función que pretendemos desarrollar la expresión `na.rm = TRUE` que permite eliminar los `NA` presentes en el vector. Esta técnica no funciona con la función `cumsum()`.
+
+```{r}
+sum(x, na.rm = TRUE)
+mean(x, na.rm = TRUE)
+```
+
+Para extraer los `NA` presentes en un vector se pueden emplear diversas funciones. Una de las más importantes es **which(is.na(x))**, que da las posiciones en las que existen `NA` dentro del vector.
+```{r}
+which(is.na (x))
+```
+
+En estadística los `NA` se suelen cambiar por un valor. Este valor suele ser la media del vector.Para ello fijate en la expresión de abajo.
+```{r}
+x -> y
+y[is.na(y)] = mean(y, na.rm = TRUE)
+y
+```
+
+Para poder emplear `cumsum()` se puede emplear la expresión **cumsum(x[!is.na(x)])**.
+```{r}
+cumsum(x[!is.na(x)])
+```
+
+Otra forma de evitar los valores `NA`es emplear la expresión `na.omit()`, aunque es menos recomendada. Esto se deb a que genera dos atributos(attr()).
+```{r}
+cumsum(na.omit(x))
+```
+
+
+
+

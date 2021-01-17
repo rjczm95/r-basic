@@ -1,0 +1,113 @@
+---
+title: "Ejercicios sobre LaTeX, R y Markdown"
+author: "Ramon Ceballos"
+date: "16/1/2021"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Instrucciones
+
+En primer lugar, debéis reproducir este documento tal cual está. Necesitaréis instalar [MiKTeX](https://miktex.org/download) y [Texmaker](http://www.xm1math.net/texmaker/).
+
+A continuación de cada pregunta, tenéis que redactar vuestras respuestas de manera correcta y argumentada, indicando qué hacéis, por qué, etc. Si se os pide utilizar instrucciones de `R`, tendréis que mostrarlas todas en chunks.
+
+El objetivo de esta tarea es que os familiaricéis con los documentos Markdown, las fórmulas en \LaTeX\   y los chunks de `R`. Y, de lo más importante, que os acostumbréis a explicar lo que hacéis en cada momento.
+
+# Preguntas
+
+## Pregunta 1
+
+Realizad los siguientes productos de matrices siguiente en `R`:
+
+$$A\cdot B$$
+$$B\cdot A$$
+$$(A\cdot B)^t$$
+$$B^t\cdot A$$
+$$(A\cdot B)^{-1}$$
+$$A^{-1}\cdot B^t$$
+
+donde
+$$A = \begin{pmatrix}1 & 2 & 3 & 4\\ 4 & 3 & 2 & 1\\ 0 & 1 & 0 & 2\\ 3 & 0 & 4 & 0\end{pmatrix}\qquad B= \begin{pmatrix}4 & 3 & 2 & 1\\ 0 & 3 & 0 & 4\\ 1 & 2 & 3 & 4\\ 0 & 1 & 0 & 2\end{pmatrix}$$
+
+Finalmente, escribe haciendo uso de \LaTeX\  el resultado de los dos primeros productos de forma adecuada.
+
+```{r Pregunta 1}
+A = cbind(c(1,4,0,3),c(2,3,1,0),c(3,2,0,4),c(4,1,2,0))
+B = cbind(c(4,0,1,0),c(3,3,2,1),c(2,0,3,0),c(1,4,4,2))
+#Puse t=2 por poner un valor numérico de t
+t=2
+A%*%B
+B%*%A
+#Cargo la libreria Biodem para hacer la potencia de la matriz
+library(Biodem)
+mtx.exp(A%*%B,t)
+mtx.exp(B,t)%*%A
+solve(A%*%B)
+solve(A)%*%t(B)
+```
+
+Los resultados de las multiplicaciones de $A \cdot B$ y $B \cdot A$ son las siguientes:
+$$A \cdot B = \begin{pmatrix}7 & 19 & 11 & 29\\ 18 & 26 & 14 & 26\\ 0 & 5 & 0 & 8\\ 16 & 17 & 18 & 19\end{pmatrix}\qquad $$
+
+$$B \cdot A = \begin{pmatrix}19 & 19 & 22 & 23\\ 24 & 9 & 22 & 3\\ 21 & 11 & 23 & 12\\ 10 & 3 & 10 & 1\end{pmatrix}\qquad $$
+
+
+## Pregunta 2
+
+Considerad en un vector los números de vuestro DNI y llamadlo `dni`. Por ejemplo, si vuestro DNI es 54201567K, vuestro vector será $$dni = (5,4,2,0,1,5,6,7)$$.
+
+Definid el vector en `R`. Calculad con `R` el vector `dni` al cuadrado, la raíz cuadrada del vector `dni` y, por último, la suma de todas las cifras del vector `dni`.
+
+Finalmente, escribid todos estos vectores también a \LaTeX.
+```{r ejercicio 2}
+#Mi DNI es 08889822T
+dni = c(0,8,8,8,9,8,2,2)
+dni
+dniCuadrado = dni^2
+dniCuadrado
+dniRaiz = sqrt(dni)
+dniRaiz
+dniSuma = sum(dni)
+dniSuma
+```
+La expresión del vector de mi DNI es:$$dni = (0,8,8,8,9,8,2,2)$$
+
+La expresión del vector de mi DNI al cuadrado es: $$dni^2 = (0,64,64,64,81,64,4,4)$$
+
+La expresión del vector de la raíz cuadrada de mi DNI es: $$\sqrt{dni} = (0.000000,2.828427,2.828427,2.828427,3.000000,2.828427)$$
+
+La expresión del vector del sumatorio de mi DNI es:$$\sum{dni} = 45$$
+
+
+## Pregunta 3
+
+Considerad el vector de las letras de vuestro nombre y apellido. Llamadlo `name`. Por ejemplo, en mi caso sería $$nombre = (M,A,R,I,A,S,A,N,T,O,S)$$
+
+Definid dicho vector en `R`. Calculad el subvector que solo contenga vuestro nombre. Calculad también el subvector que contenga solo vuestro apellido.
+Ordenadlo alfabéticamente. Cread una matriz con este vector.
+
+Redactad todos vuestros resultados y utilizad \LaTeX\
+
+```{r tercer ejercicio}
+name = c("R","A","M","O","N","C","E","B","A","L","L","O","S")
+name[1:5]
+name[6:(length(name))]
+sort(name)
+matrix(name,nrow=3)
+```
+
+Para definir el vector de mi nombre, que es Ramón Ceballos, empleo la expresión `vector = c(a,b,...)` siendo el resultado final:$$name = (R,A,M,O,N,C,E,B,A,L,L,O,S)$$
+
+Extraigo mi nombre de dicho vector con la siguiente expresión $name \ [1:5]$.
+
+Extraido mi apellido de dicho vector con la siguiente expresión $name \ [6:length(name)]$.
+
+Para ordenar alfabeticamente las letras del vector se emplea la expresión $sort(name)$.
+
+Para obtener una matriz de tres filas y cinco columnas a partir del vector name se emplea la expresión $matrix (name, nrow = 3)$.

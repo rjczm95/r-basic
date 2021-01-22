@@ -1,0 +1,181 @@
+---
+title: "DATA FRAMES"
+author: "Ramon Ceballos"
+date: "22/1/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Data Frames
+
+Hay sinónimos de Dta Frame como son Tablas de datos, Data sets, hojas de datos...
+
+## 1. Introducción
+
+<l class="definition">Data frame.</l> Un data frame es una tabla de doble entrada, formada por variables en las columnas y observaciones de estas variables en las filas, de manera que cada fila contiene los valores de las variables (recogidas en las columnas) para un mismo caso o un mismo individuo.
+
+Las columnas pueden contener datos de naturaleza diferente.
+
+- `data()`: para abrir una ventana con la lista de los objetos de datos a los que tenemos acceso en la sesión actual de R (los que lleva la instalación básica de R y los que aportan los paquetes que tengamos cargados. Para carta un paquete específico utiliza data(package = "nombre_paquete").
+
+    - Si entramos `data(package=.packages(all.available = TRUE))` obtendremos la lista de todos los objetos de datos a los que tenemos acceso, incluyendo los de los paquetes que tengamos instalados, pero que no estén cargados en la sesión actual.
+    
+Cuando utilizamos un data set es importante documentarse acerca de él (de donde viene y demás). Usa `?nombre_dataset`.
+
+Cuando se utiliza un dataset que no ha sido creado por nosotrso, lo recomendable es guardarlo en una variable denominada `df` de data frame. Esto permite modificar el data frame sin modificar el original.
+
+Para obtener la información de un data frmae se emplea las siguientes funciones:
+
+- `head(d.f,n)`: para mostrar las $n$ primeras filas del data frame. Por defecto se muestran las 6 primeras filas.
+- `tail(d.f,n)`: para mostrar las $n$ últimas filas del data frame. Por defecto semuestran las 6 últimas.
+- `str(d.f)`: para conocer la estructura global de un data frame.
+- `names(d.f)`:  para producir un vector con los nombres de las columnas.
+
+```{r}
+str(Orange)
+```
+
+
+### 1.1. Data Frame de Iris (ejemplo)
+
+Vamos a investigar un poco con el data frame de Iris.
+
+```{r}
+df = iris
+#Muestra cinco primero elementos del df
+head(df,5)
+#Muestra cinco últimos elementos del df
+tail(df,5)
+#Obtenemos los nombres de las columnas de df
+names(df)
+#Conocer la estructura global del df
+str(df)
+
+```
+
+
+## 2. Estructura y filtrado de Data Frames
+
+Algunas funciones aplicadas a los data frame son:
+
+- `rownames(d.f)`: para producir un vector con los identificadores de las filas
+    - R entiende siempre que estos identificadores son palabras, aunque sean números, de ahí que los imprima entre comillas
+- `colnames(d.f)`: para producir un vector con los identificadores de las columnas
+- `dimnames(d.f)`: para producir una list formada por dos vectores (el de los identificadores de las filas y el de los nombres de las columnas)
+- `nrow(d.f)`: para consultar el número de filas de un data frame
+- `ncol(d.f)`: para consultar el número de columnas de un data frame
+- `dim(d.f)`: para producir un vector con el número de filas y el de columnas
+- `d.f$nombre_variable (columna)`: para obtener una columna concreta de un dataframe
+    - El resultado será un vector o un factor, según cómo esté definida la columna dentro del data frame
+    - Las variables de un data frame son internas, no están definidas en el entorno global de trabajo de R
+
+#### Ejemplo
+
+```{r}
+df = iris
+head(df, 5)
+tail(df, 5)
+
+str(df)
+names(df) #colnames
+rownames(df)
+dimnames(df)
+
+dim(df)
+
+#Extraer las 10 primeras filas de la columa Petal.Lenght
+df$Petal.Length[1:10] # Da un vector
+#Extraer las 10 primeras filas de la columa Species
+df$Species[1:10] # Da un factor
+
+```
+
+
+### 2.1. Sub-data Frames
+
+De un Data Frame se puede extraer un SubData Frame.
+
+- `d.f[n,m]`: para extraer “trozos” del data frame por filas y columnas (funciona exactamente igual que en matrices) donde $n$ y $m$ pueden definirse como:
+    - intervalos
+    - condiciones
+    - números naturales
+    - no poner nada
+    - Si sólo queremos definir la subtabla quedándonos con algunas variables, basta aplicar el nombre del data frame al vector de variables 
+    - Estas construcciones se pueden usar también para reordenar las filas o columnas
+    
+#### Ejemplo
+
+**Acceso al Data Frame**
+
+```{r}
+#Da subDF de las filas 1 a la 10
+df[1:10, ]
+#Da subDF de las filas 1 a la 10 en las columnas 2, 3 y 4
+df[1:10, 2:4]
+#Establecer una condición sobre la fila extrayendola
+df[df$Species == "setosa" & df$Sepal.Width> 4, ]
+#Además de por condición se pueden seleccionar las columnas y filas que nos queremos quedar de la selección hecha
+df[df$Species == "setosa" & df$Sepal.Width> 4, ][c(1,3), c(2,5)]
+```
+
+**Otro ejemplo con DF de Orange**
+
+```{r}
+dataOrange = Orange
+dataOrange[c(10:12),]
+dataOrange[c(2,17),c(1,3)]
+dataOrange[2,3]
+dataOrange[dataOrange$circumference<=50,]
+```
+
+## 3. Cargar Data Frames en R
+
+Para cargar data frames en R tenemos diversas funciones. Ahora nos vamos a centrar en:
+
+- `read.table()`: para definir un data frame a partir de una tabla de datos contenida en un fichero
+    - Este fichero puede estar guardado en nuestro ordenador o bien podemos conocer su url. Sea cual sea el caso, se aplica la función al nombre del fichero o a la dirección entre comillas. El fichero debe ser simple (tabla de datos).
+
+Lo suyo para trabajar con datos es organizar en dos subcarpetas diferentes los script y los datas que empleemos.
+
+La función read.table() lleva asociada una serie de parámetros:
+
+- `header = TRUE`: para indicar si la tabla que importamos tiene una primera fila con los nombres de las columnas. El valor por defecto es FALSE
+- `col.names = c(...)`: para especificar el nombre de las columnas. No olvidéis que cada nombre debe ir entre comillas
+- `sep`: para especificar las separaciones entre columnas en el fichero (si no es un espacio en blanco). Si es así, hay que introducir el parámetro pertinente entre comillas
+- `dec`: para especificar el signo que separa la parte entera de la decimal (si no es un punto). Si es así, hay que introducir el parámetro pertinente entre comillas. Por defecto es un punto
+    
+### 3.1. Carga DT Local
+
+Se utiliza: `read.table("path_fichero")`.
+
+```{r}
+#../ me permite subir de nivel en el directorio
+#Los datos cargados no tienen nombre de columnas
+dbulls=read.table("../../../data/bulls.dat",header = FALSE, col.names = c("breed","sale_price","shoulder","fat_free", "percent_ff","frame_scale","back_fat","sale_height", "sale_weight"))
+head(dbulls)
+
+#Descargado csv a través de kaggle
+dkaggle=read.table("../../../data/country_vaccinations.csv",header=TRUE,sep=",")
+head(dkaggle,4)
+str(dkaggle)
+```
+
+
+### 3.2. Carga DT a través de URL
+
+Se utiliza la url donde esté el fichero en la web:  `read.table("url")`.
+
+```{r}
+dkaggle2=read.table("https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/vaccinations.csv", header=TRUE, sep=",",quote="")
+head(dkaggle2,4)
+str(dkaggle2)
+```
+    
+
+

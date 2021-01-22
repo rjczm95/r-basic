@@ -1,0 +1,13 @@
+---
+title: "DATA FRAME"
+author: "Ramon Ceballos"
+date: "22/1/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 1. Funciones en Data Frames
+

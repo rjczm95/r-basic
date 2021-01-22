@@ -1,0 +1,80 @@
+---
+title: "DATA FRAMES"
+author: "Ramon Ceballos"
+date: "22/1/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Construcción de Data Frame
+
+Se pueden crear data frames a través de la siguiente función y vectores de observaciones que generarán los vectores.
+
+- `data.frame(vector_1,...,vector_n)`: para construir un data frame a partir de vectores introducidos en el orden en el que queremos disponer las columnas de la tabla
+    - R considera del mismo tipo de datos todas las entradas de una columna de un data frame
+    - Las variables tomarán los nombres de los vectores. Estos nombres se pueden especificar en el argumento de `data.frame` entrando una construcción de la forma `nombre_variable = vector`
+    - `rownames`: para especificar los identificadores de las filas
+    - También en esta función podemos hacer uso del parámetro `stringsAsFactors` para evitar la transformación de las columnas de tipo palabra en factores
+
+**Ejemplos de construcción de Data Frame**
+```{r}
+Algebra = c(1,2,0,5,4,6,7,5,5,8)
+Analysis = c(3,3,2,7,9,5,6,8,5,6)
+Statistics = c(4,5,4,8,8,9,6,7,9,10)
+grades = data.frame(Alg = Algebra, An = Analysis, Stat = Statistics)
+str(grades)
+```
+
+```{r}
+genero=c("Hombre", "Hombre", "Hombre", "Hombre", "Mujer", "Mujer", "Mujer", "Mujer")
+edad=c(12,34,63,33,22,27,90,15)
+soltero=c("yes","no","no","yes","yes","no","no","yes")
+citizens =data.frame(gender=genero,age=edad,single=soltero,stringsAsFactors = TRUE)
+rownames(citizens)=c("p1","p2","p3","p4","p5","p6","p7","p8")
+str(citizens)
+citizens
+```
+
+Hay más funciones que pueden variar los data frames.
+
+- `fix(d.f)`: para crear / editar un data frame con el editor de datos
+- `names(d.f)`: para cambiar los nombres de las variables
+- `rownames(d.f)`: para modificar los identificadores de las filas. Han de ser todos diferentes
+- `dimnames(d.f)=list(vec_nom_fil, vec_nom_col)`: para modificar el nombre de las filas y de las columnas simultáneamente
+- `d.f[núm_fila,] = c(...)`: para añadir una fila a un data frame
+    - Las filas que añadimos de esta manera son vectores, y por tanto sus entradas han de ser todas del mismo tipo
+    - Si no añadimos las filas inmediatamente siguientes a la última fila del data frame, los valores entre su última fila y las que añadimos quedarán no definidos y aparecerán como NA
+    - Para evitar el problema anterior, vale más usar la función `rbind()` para concatenar el data frame con la nueva fila
+- `d.f$new_var`: para añadir una nueva variable al data frame
+    - Podemos concatenar columnas con un data frame existente mediante la función `cbind()`. De este modo se puede añadir la columna directamente sin necesidad de convertirla antes a data frame
+    - Esta nueva variable ha de tener la misma longitud que el resto de columnas del data frame original. Si no, se añadirán valores NA a las variables del data frame original o a la nueva variable hasta completar la misma longitud
+
+```{r}
+gender = c("H", "M", "M", "M", "H")
+age =    c( 23,  45,  20,  30,  18)
+family = c(  2,   3,   4,   2,   5)
+df5 = data.frame(genero = gender, edad = age, familia = family, stringsAsFactors = TRUE)
+row.names(df5) = c("P1", "P2", "P3", "P4", "P5")
+df5
+str(df5)
+dimnames(df5) = list(
+  c("Antonio", "Ricardo", "JuanGabriel", "María", "Margarita"),
+  c("Sexo", "Años", "MiembrosFamilia")
+)
+df5
+#Añadir una fila, mejor opción para adicionar (rbind)
+df5 = rbind(df5, c("H", 30, 1))
+df5
+#convertir en carácter un factor 
+df5$Sexo = as.character(df5$Sexo)
+#Definir una nueva columna para el data frame
+df5$Ingresos = c(10000, 12000, 15000, 12000, 20000, 10000)
+df5
+```
+

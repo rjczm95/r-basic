@@ -1,0 +1,113 @@
+---
+title: "Ejercicios - Data Frame R"
+author: "Ramon Ceballos"
+date: "23/1/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Carga en R el CSV de la web http://winterolympicsmedals.com/medals.csv y responde a las preguntas de la tarea.
+
+```{r}
+df_medals = read.csv("http://winterolympicsmedals.com/medals.csv", header=TRUE, stringsAsFactors = FALSE)
+str(df_medals)
+head(df_medals,10)
+```
+
+
+# Preguntas de esta tarea
+
+## 1.¿Cuantos deportistas aparecen en el data frame?
+```{r}
+#Para saber el número de deportistas tenemos que averiguar el nº de filas que hay
+deportistas = nrow(df_medals)
+deportistas
+```
+
+
+## 2.¿Cuantos han ganado medallas de oro, cuantos de plata y cuantos de bronce?
+
+```{r}
+#Selcciono las medallas de oro
+gold = nrow(subset(df_medals, Medal == "Gold", select = "Medal"))
+gold
+
+#Selcciono las medallas de plata
+silver = nrow(subset(df_medals, Medal == "Silver", select = "Medal"))
+silver
+
+#Selcciono las medallas de bronce
+bronze = nrow(subset(df_medals, Medal == "Bronze", select = "Medal"))
+bronze
+```
+
+
+## 3.¿En cuantos lugares se han hecho olimpiadas de invierno?
+
+```{r}
+#Convierto a factor la columna de las ciudades y cuento cuanto niveles tiene dicho factor
+df_medals$City = as.factor(df_medals$City)
+cities = length(levels(df_medals$City))
+cities
+```
+
+
+## 4.¿Cuantos hombres y cuantas mujeres hay?
+
+```{r}
+#Calculo los hombres
+hombres = nrow(subset(df_medals, Event.gender == "M", select = "Event.gender"))
+hombres
+
+#Calculo las mujeres
+mujeres = nrow(subset(df_medals, Event.gender == "W", select = "Event.gender"))
+mujeres
+
+```
+
+
+## 5.¿En qué año participaron más deportistas?
+
+```{r}
+
+athletes_year = table(df_medals$Year)
+athletes_year
+
+#El año que más atletas participaron fue el año 2006 con 252 atletas.
+
+```
+
+
+## 6.El campo NOC indica el país del ganador de la medalla. ¿Qué país puede presumir de haber ganado más medallas de oro en los juegos de invierno entre 1960 y 1996?
+
+```{r}
+
+df_medals$Year=as.integer(df_medals$Year)
+
+#Selecciono una submatriz de los años comprendidos entre 1960 y 1996, con los atletas que ganaron medallas de oro
+df2 = subset(df_medals, 1960 <= Year & Year <= 1996 & Medal=="Gold")
+
+#Introduzco una nueva variable que le de el valor 1 a cada medalla de oro
+str(df2)
+new_column = c(rep(1,411))
+df2$Number_gold = new_column
+str(df2)
+
+#Medallas de oro obtenidas por cada pais
+Gold_NOC= aggregate(Number_gold~NOC, data =df2, FUN = sum)
+Gold_NOC
+
+Max_Gold_NOC =subset(Gold_NOC, Number_gold == max(Gold_NOC$Number_gold), select = "NOC")
+Max_Gold_NOC
+
+#La URS es el país con más medallas de oro entre los años 1960 y 1996
+
+```
+
+

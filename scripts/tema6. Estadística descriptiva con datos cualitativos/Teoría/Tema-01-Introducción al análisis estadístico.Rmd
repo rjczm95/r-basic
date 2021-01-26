@@ -1,0 +1,77 @@
+---
+title: "Estadística Descriptiva con Datos Cualitativos"
+author: "Ramon Ceballos"
+date: "24/1/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 1. Introducción al Análisis Estadístico
+
+## 1.1 Tipos de análisis estadístico de los datos
+
+Cuando tenemos una serie de datos que describen algunos aspectos de un conjunto de individuos queremos llevar a cabo un análisis estadístico. Estos análisis estadísticos se clasifican en:
+
+- <l class="definition">Análisis exploratorio</l>, o <l class="definition">descriptivo</l>, si nuestro objetivo es resumir, representar y explicar los datos concretos de los que disponemos. La <l class="definition">estadística descriptiva</l> es el conjunto de técnicas que se usan con este fin (visualizar, representar, explicar y resumir esos datos).
+
+- <l class="definition">Análisis inferencial</l>, si nuestro objetivo es deducir (inferir), a partir de estos datos, información significativa sobre el total de la población o las poblaciones de interés. Las técnicas que se usan en este caso forman la <l class="definition">estadística inferencial</l>. Engloba técnicas como los intervalos de confianza, el contraste de hipótesis...
+
+A su vez, ambos análisis se encuentran interrelacionados. 
+
+Cualquier análisis estadístico inferencial empieza explorando los datos que se van a utilizar y muchas técnica descriptivas son empleadas para estimar propiedades de una población.
+
+Existe relación entre ambos. Cualquier análisis inferencial se suele empezar explorando los datos que se usarán así cómo también muchas técnicas descriptivas permiten estimar propiedades de la población de la que se ha extraído la muestra. 
+
+<div class="example">
+
+**Ejemplo**
+
+La media aritmética de las alturas de una muestra de individuos nos da un valor representativo de esta muestra, pero también estima la media de las alturas del total de la población
+
+</div>
+
+**OBJETIVO DEL CURSO**
+
+Nos centraremos en entender algunas técnicas básicas de la estadística descriptiva orientadas al análisis de datos.
+
+Estas consistirán en una serie de medidas, gráficos y modelos descriptivos que nos permitirán resumir y explorar un conjunto de datos.
+
+**Objetivo final**: entender los datos lo mejor posible.
+
+## 1.2 Tipos de datos para el análisis estadístico descriptivo
+
+Trabajamos con <l class="definition">datos multidimensionales:</l> observamos varias características de una serie de individuos (lugares u objetos). 
+
+Se registran en un archivo de ordenador con un formato preestablecido. Por ejemplo texto simple (codificado en diferentes formatos: ASCII, isolatin$\dots$), hojas de cálculo (archivos de Open Office o Excel), bases de datos, etc. 
+
+
+Una de las maneras básicas de almacenar datos es en forma de **tablas de datos**. En R hacemos uso de data frames.
+
+En una tabla de datos cada columna expresa una variable, mientras que cada fila corresponde a las observaciones de estas variables para un individuo concreto. 
+
+- Los *datos* de una misma columna tienen que ser del mismo tipo, porque corresponden a observaciones de una misma propiedad. 
+- Las *filas* en principio son de naturaleza heterogénea, porque pueden contener datos de diferentes tipos. 
+
+
+Los tipos de datos que consideramos para el análisis descriptivo son los siguientes:
+
+- <l class="definition">Datos de tipo atributo</l>, o <l class="definition">cualitativos:</l> Expresan una cualidad del individuo como puede ser el sexo, la especie, el país de origen... En R guardaremos las listas de datos cualitativos en vectores (habitualmente, de palabras), o en factores si vamos a usarlos para clasificar individuos.
+
+- <l class="definition">Datos ordinales:</l> Similares a los cualitativos, con la única diferencia de que se pueden ordenar de manera natural. Por ejemplo, las calificaciones en un control (suspenso, aprobado, notable, sobresaliente), la calidad de vida en un ecosistema (malo, regular, bueno)... En R guardaremos las listas de datos ordinales en **factores ordenados**.
+
+- <l class="definition">Datos cuantitativos:</l> Se refieren a medidas, tales como edades, longitudes, etc. En R guardaremos las listas de datos cuantitativos en **vectores numéricos**.
+
+**Ejemplo**
+
+```{r}
+#De las cinco columnas las 4 primeras son numericas y la ultima es un factor con tres niveles (factor no ordenada)
+head(iris ,5)
+#Se dan 4 variables cuantitativas y una variable cualitativa (factor no ordenado)
+str(iris)
+```

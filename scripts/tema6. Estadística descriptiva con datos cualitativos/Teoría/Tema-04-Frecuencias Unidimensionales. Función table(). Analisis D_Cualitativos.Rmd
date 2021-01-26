@@ -1,0 +1,211 @@
+---
+title: "Estadística Descriptiva con Datos Cualitativos"
+author: "Ramon Ceballos"
+date: "24/1/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# TABLAS DE FRECUENCIAS UNIDIMENSIONALES
+
+Las tablas de frecuencias unidimensionales son aquellas que tienen una única variable.
+
+Supongamos que tenemos una variable cualitativa guardada en un vector o un factor como la siguiente:
+
+```{r}
+#Toma 12 número de la muestra que comprende los nºs del 1 al 5
+#replace=TRUE permite que se pueda obtener el mismo nº más de una vez
+#Es una variable cualitativa numérica
+x = sample(1:5, size = 12, replace = TRUE)
+x
+
+#se genera otra variable cualitativa con sample()
+#En este caso toma los valores si y no
+#se genera un factor no ordenado
+Respuestas=factor(sample(c("Si", "No"), size = 12, replace = TRUE)) 
+Respuestas
+```
+
+## 1. Función table(). Frecuencias absolutas
+
+Con R, la tabla de *frecuencias absolutas* de un vector que representa una variable cualitativa se calcula con la función **`table()`**.
+
+```{r}
+#Proviene del ejemplo anterior
+table(x)
+#Proviene del ejemplo anterior
+table(Respuestas)
+```
+
+El resultado de una función `table()` es un objeto de datos de un tipo nuevo: una **tabla de contingencia**, una *`table`* en el argot de R. 
+
+Al aplicar `table()` a un vector obtenemos una tabla unidimensional formada por una fila (la primera) con los niveles de la variable y una segunda fila donde, debajo de cada nivel, aparece su frecuencia absoluta en el vector.
+
+Los nombres de las columnas de una tabla unidimensional se obtienen con la función **`names()`**.
+
+```{r}
+names(table(x))
+
+names(table(Respuestas))
+```
+
+En la **`table`** de un vector sólo aparecen los nombres de los niveles presentes en el vector. Si el tipo de datos cualitativos usado tenía más niveles y queremos que aparezcan explícitamente en la tabla (con frecuencia 0), hay que transformar el vector en un factor con los niveles deseados.
+
+```{r}
+#Para asignar los niveles del factor se puede hacer lo siguiente
+#También valdría para asignar más niveles a dichos datos cualitativos
+z=factor(x, levels=1:7) #Los niveles serán 1,2,3,4,5,6,7 
+z
+table(z)
+```
+
+Podemos pensar que una tabla unidimensional es como un vector de números donde cada entrada está identificada por un nombre: el de su columna. Para referirnos a una entrada de una tabla unidimensional, podemos usar tanto su posición como su nombre (entre comillas, aunque sea un número).
+
+```{r}
+table(x)[3] #La tercera columna de table(x)
+#No existe en esta tabla de contingencia
+table(x)["7"] #¿La columna de table(x) con nombre 7?
+```
+
+```{r}
+table(x)["5"] #La columna de table(x) con nombre 5
+3*table(x)[2] #El triple de la segunda columna de table(x)
+```
+
+Las tablas de contingencia aceptan la mayoría de las funciones que ya hemos utilizado para vectores.
+
+```{r}
+sum(table(x)) #Suma de las entradas de table(x)
+sqrt(table(Respuestas)) #Raíces cuadradas de las entradas de table(Respuestas)
+```
+### Ejemplos con la función table().
+
+**Tablas de contingencia**
+```{r}
+datos = factor(c("H", "M", "M", "M", "H", "H", "M", "M"))
+#Creamos la tabla de contingencia del factor datos
+table(datos)
+#Para acceder únicamente al nivel de mujeres se hace lo siguiente
+table(datos)["M"]
+#Para obtener el total de observaciones dadas para dicha variable cualitativa
+sum(table(datos))
+```
+
+## 2. Función prop.table(). Frecuencias relativas
+
+La tabla de *frecuencias relativas* de un vector se puede calcular aplicando la función **`prop.table()`** a su *`table()`*. El resultado vuelve a ser una tabla de contingencia unidimensional.
+
+```{r}
+prop.table(table(x))
+
+prop.table(table(Respuestas))
+```
+
+<l class="important">**¡CUIDADO!**</l> La función **`prop.table()`** se tiene que aplicar al resultado de *`table()`*, no al vector original. Si aplicamos `prop.table()` a un vector de palabras o a un factor, dará un error, pero si la aplicamos a un vector de números, nos dará una tabla.
+
+Esta tabla no es la tabla de frecuencias relativas de la variable cualitativa representada por el vector, sino la tabla de frecuencias relativas de una variable que tuviera como tabla de frecuencias absolutas este vector de números, entendiendo que cada entrada del vector representa la frecuencia de un nivel diferente.
+
+```{r}
+#No está bien hecho de este modo
+prop.table(x)
+```
+
+```{r}
+#Vamos a ver un ejemplo más claro de la diferencia de lo dicho anteriormente
+X=c(1,1,1)
+prop.table(table(X))
+prop.table(X)
+```
+
+También podemos calcular la tabla de frecuencias relativas de un vector dividiendo el resultado de `table` por el número de observaciones.
+
+
+```{r}
+#obtener frecuencias relativas a mano
+table(x)/length(x)
+```
+
+Dados un vector $x$ y un número natural $n$, se puede hallar que niveles del factor tienen un frecuencia absoluta n en x con la instrucción:
+
+<div class="aligncenter">
+**``names(which(table(x)==n))``**
+</div>
+
+Nos da los niveles que tienen frecuencia absoluta $n$ en $x$.
+```{r}
+table(x)
+#Nos da la table con los niveles que aparezcan una sola vez
+#Solo pido las etiquetas de los niveles del factor
+names(which(table(x)==1))
+```
+
+En particular, por lo tanto, la instrucción:
+<div class="aligncenter">
+**`names(which(table(x)==max(table(x))))`**
+</div>
+
+,nos da los niveles de frecuencia máxima en $x$: su <l class="definition">**moda**</l>.
+```{r}
+names(which(table(x)==max(table(x))))
+names(which(table(Respuestas)==max(table(Respuestas))))
+```
+
+### Ejemplos con la función prop.table().
+
+**Frecuencias relativas**
+
+$$f_i = \frac{n_i}{n}$$
+
+```{r}
+datos = factor(c("H", "M", "M", "M", "H", "H", "M", "M"))
+table(datos)
+table(datos)["M"]
+sum(table(datos))
+
+#Tabla de frecuencias relativas
+prop.table(table(datos))
+100*prop.table(table(datos))
+table(datos)/length(datos)
+names(which(table(datos)==3))
+
+#Función para obtener la moda
+moda <- function(d){
+  names(which(table(d)==max(table(d))))
+}
+
+#La moda sería:
+m_t = moda(datos)
+```
+
+La moda del data frame es: `r m_t` = mujer.
+
+### EJERCICIOS PROPUESTOS
+
+Recuperad el ejemplo de los 6 hombres y las 14 mujeres anterior y utilizando R, calculad su tabla de frecuencias absolutas, su tabla de frecuencias relativas y la moda.
+
+Pista: usad la función `rep()` para no tener que escribir los datos a mano.
+
+```{r}
+#creo el vector gender
+gender = c(rep("H",6),rep("M",14))
+
+#frecuencia absoluta de gender
+fa = table(gender)
+fa
+
+#frecuencias relativas de gender
+fr = prop.table(fa)
+fr
+
+#moda de gender
+moda_gender = names(which(table(gender)==max(table(gender))))
+moda_gender
+
+```
+

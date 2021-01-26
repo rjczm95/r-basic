@@ -1,0 +1,74 @@
+---
+title: "Estadística Descriptiva con Datos Cualitativos"
+author: "Ramon Ceballos"
+date: "24/1/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# ESTUDIO DE FRECUENCIAS
+
+Dada una variable cualitativa, para cada uno de sus niveles podemos contar cuántos datos hay en ese nivel (**frecuencia absoluta**) y qué fracción del total (proporción) representan (**frecuencia relativa**).
+
+### **Ejemplo**
+
+*Supongamos que tenemos un tipo de datos cualitativos con niveles:*
+$$l_1,l_2,\cdots,l_k$$ 
+
+*Efectuamos $n$ observaciones de este tipo de datos, y denotamos por:*
+$$x_1,x_2,\cdots,x_n$$
+
+*Los resultados que obtenemos con x pertenciente a algún nivel de la variable cualitativa estudiada.* 
+$$x_j\in\{l_1, l_2,\cdots, l_k\}$$
+
+*Estas observaciones forman una variable cualitativa.*
+
+
+## 1. Definiciones de la frecuencia absoluta y relativa
+
+Con las notaciones del ejemplo anterior, definiremos estas frecuencias del siguiente modo.
+
+La <l class="definition">**frecuencia absoluta**</l>, $n_j$, del nivel $l_j$ en esta variable cualitativa es el número de observaciones en las que $x_i$ toma el valor $l_j$.
+
+La <l class="definition">**frecuencia relativa**</l> del nivel $l_j$ en esta variable cualitativa es la fracción: 
+$$f_j = \frac{n_j}{n}$$
+
+Es decir, la frecuencia relativa del nivel $l_j$ es la fracción (en tanto por uno) de observaciones que corresponden a este nivel. 
+
+La <l class="definition">**moda**</l> de esta variable cualitativa es su nivel, o niveles, de mayor frecuencia (absoluta o relativa).
+
+### **Ejemplo**
+
+*Supongamos que se ha realizado un seguimiento a 20 personas asistentes a un congreso. Uno de los datos que se han recogido sobre estas personas ha sido su sexo. El resultado ha sido una variable cualitativa formada por las 20 observaciones siguientes:*
+
+`Mujer, Mujer, Hombre, Mujer, Mujer, Mujer, Mujer, Mujer, Hombre, Mujer, Hombre, Hombre, Mujer, Mujer, Hombre, Mujer, Mujer, Mujer, Mujer, Hombre`
+
+*Sus dos niveles son `Hombre` y `Mujer`. En esta variable hay 14 mujeres y 6 hombres. Éstas son las frecuencias absolutas de estos niveles. *
+
+*Puesto que en total hay 20 individuos, sus frecuencias relativas son*
+$$\text{Hombre} = \frac{6}{20} = 0.3,\qquad \text{Mujer} = \frac{14}{20} = 0.7$$
+*En este caso $l_1 = \text{Hombre}$ y $l_2 = \text{Mujer}$,  $n = 20$ (el número de observaciones efectuadas), y $x_1,\cdots, x_{20}$ formarían la muestra de sexos.*
+</div>
+
+*La tabla siguiente resume las frecuencias absolutas y relativas de la variable cualitativa del ejemplo anterior, con las notaciones que acabamos de introducir.*
+
+$$\begin{array}{|l|c|c|c|}
+\hline
+Sexo   & n_i & f_i & \%     \\ 
+\hline
+\text{Hombre} & 6    & 0.3  & 30\%   \\ 
+\text{Mujer}  & 14   & 0.7  & 70\%   \\ 
+\text{Total}  & 20   & 1    & 100\%  \\
+\hline
+\end{array}$$
+
+*Su moda es el nivel `Mujer`.*
+
+
+

@@ -1,0 +1,73 @@
+---
+title: "Estadistica descriptiva con datos cualitativos"
+author: "Curso de Estadística Descriptiva"
+date: "24/12/2018"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# DATASET: HairEyeColor
+
+El dataset **HairEyeColor** recoge tres variables cualitativas y `R` trae definido de serie. Se recogen las variables de genero (hombre/mujer), color de ojos (4 colores diferentes) y color de pelo (4 colores diferentes).
+
+Este dataset no es un *DataFrame* ya que viene definido como frecuencias absolutas directamente. Por tanto, los datos aparecen agregados siendo una forma común en el mundo real.
+
+```{r}
+HairEyeColor
+
+#Para obtener el número de individuos totales se usa:
+sum(HairEyeColor) -> total
+```
+
+El total de individuos de la tabla de datos es `r total`.
+
+## Obtener tabla de frecuencias marginales
+
+Se emplea la función prop.table() sobre el dataset, de forma directa.
+
+```{r}
+#Frec. Rel. Marg. por género (hombre/mujer)
+prop.table(HairEyeColor, margin = 3)
+
+#Frec. Rel. Marg. por color de pelo y el color de ojos (combinación de los colores)
+prop.table(HairEyeColor, margin = c(1,2))
+```
+
+## Cambiar orden de las variables -> aperm()
+
+Para cambiar el orden de variables dentro de un dataset ya creado se utiliza la función **aperm(dataset, perm = c(variable1, variable2, variable3))** (array permutation). Permite cambiar el orden de las columnas, que ahora están definidas como:
+
+- *Primera variable = color de pelo*. Debido a que define las filas (rows).
+-*Segunda variable = color de ojos*. Debido a que define las columnas (columns).
+-*Tercera variable = genero*. Debido a que da el nombre de las tablas bidimensionales.
+
+El nuevo orden establecido será primero el genero, segundo el color del pelo y tercero el color de los ojos.
+
+```{r}
+aperm(HairEyeColor, perm = c("Sex", "Hair", "Eye"))
+```
+
+## Formatear la salida de las tablas -> Librería kableExtra y Librería xtable
+
+La librería **kableExtra** permite dar un mejor formato a las tablas. Kable forma parte de *Knit*, y permite obtener una representación global de los datos que guarda R. S eusa la función **kable()**.
+
+No es adecuado para analizar tres variables cualitativas.
+
+```{r}
+#library(kableExtra)
+#kable(HairEyeColor)
+```
+
+Otra librería utilizada para formatear tablas es **xtable**. Se utiliza la función **xtable()** para el formateo y se emplea como máximo para *tablas bidimensionales*.
+
+Para que te aparezca no solo el código matemático LaTeX se debe poner en el chunk **results ="asis"**. En html no se genera la tabla con xtable().
+
+```{r, results='asis'}
+#library(xtable)
+sex = factor(c("H", "M", "M", "M", "H", "H", "M", "M"))
+ans = factor(c("S", "N", "S", "S", "S", "N", "N", "S"))
+
+#xtable(table(sex, ans)) 
+```
+

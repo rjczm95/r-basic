@@ -1,0 +1,45 @@
+---
+title: "Estadística Descriptiva con Datos Cualitativos"
+author: "Ramon Ceballos"
+date: "24/1/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 1. ¿Qué son los datos cualitativos?
+
+Los <l class="definition">datos cualitativos</l> corresponden a observaciones sobre cualidades de un objeto o individuo. 
+
+Suelen codificarse por medio de palabras, pero también se pueden usar números que jueguen el papel de etiquetas.
+
+
+**Ejemplo**
+
+*Es habitual representar No (o Falso, Fracaso, Ausente...) con un 0, y Sí (o Verdadero, Éxito, Presente...) con un 1.*
+
+Los datos cualitativos son aquellos que pueden ser iguales o diferentes, pero que no admiten ningún otro tipo de comparación significativa.
+
+Es decir, que no tenga ningún sentido preguntarse si uno es más grande que otro, ni efectuar operaciones aritméticas con ellos, aunque estén representados por números. 
+
+Por tanto, la aritmética carece de sentido aquí.
+
+Por lo tanto, un mismo conjunto de datos puede ser cualitativo o de otro tipo, según el análisis que vayamos a hacer de él. 
+
+**Ejemplo**
+
+*Si hemos anotado durante unos años los días de la semana en los que ha llovido y queremos contar cuántas veces ha ocurrido en lunes, cuántas en martes, etc., esta lista de nombres (o números) serán datos cualitativos. Si, en cambio, queremos estudiar cómo se comportan los días de lluvia según avanza la semana, y por lo tanto el orden de los días es relevante, serán datos ordinales*
+
+# 2.Definición de variables cualitativas
+
+<l class="definition">**Variable cualitativa:**</l> lista de observaciones de un tipo de datos cualitativos sobre un conjunto concreto de objetos. 
+
+<l class="definition">**Niveles:**</l> diferentes valores que pueden tomar estos datos. Por ejemplo, los dos niveles de una variable Sexo serían `M` (Macho) y `H` (Hembra), o sinónimos.
+
+Con R, usaremos vectores y factores para representar variables cualitativas. Los factores nos servirán para agrupar las observaciones según los niveles de la variable. De esta manera podremos segmentar la población que representa la variable en grupos o subpoblaciones, asignando un grupo a cada nivel, y podremos comparar el comportamiento de otras variables sobre estos grupos.
+

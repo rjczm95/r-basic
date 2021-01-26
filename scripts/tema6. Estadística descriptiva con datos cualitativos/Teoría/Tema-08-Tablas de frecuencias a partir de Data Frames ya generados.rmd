@@ -1,0 +1,88 @@
+---
+title: "Estadística Descriptiva con Datos Cualitativos"
+author: "Ramon Ceballos"
+date: "26/1/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# TABLAS DE FRECUENCIAS PARTIENDO DE DATA FRAMES YA GENERADOS
+
+Como ya hemos comentado en varias ocasiones, la manera natural de organizar datos multidimensionales en `R` es en forma de data frame. 
+
+En esta sección explicaremos algunas instrucciones para calcular tablas de frecuencias absolutas a partir de un data frame de variables cualitativas. 
+
+Para ilustrarla, usaremos el fichero que se encuentra en el la carpeta de datos: `"data/EnergyDrink"`
+
+Este fichero consiste en una tabla de datos con la siguiente información sobre 122 estudiantes de una Universidad de España: su sexo (variable `sexo`), el estudio en el que están matriculados (variable `estudio`) y si consumen habitualmente bebidas energéticas para estudiar (variable `bebe`).
+
+```{r}
+#Creo la varibale BebEnerg a partir de los datos de EnergyDrink
+Beb_Energ = read.table("../../../data/EnergyDrink", header = TRUE)
+
+#Consulto la estructura del DataFrame
+str(Beb_Energ)
+
+#Consulto las 3 primeras filas
+head(Beb_Energ,3)
+```
+
+
+Aplicando la función **`summary()**` a un data frame de variables cualitativas, obtenemos, a modo de resumen, una tabla con las **frecuencias absolutas** de cada variable. No es más que un resumen de las variables.
+
+Esta tabla sólo sirve para ver la información, porque sus entradas son palabras. Solo valdría para variables de tipo factor, ya que para variables numéricas la función summary() da una serie de medidas del mundo de la estadística.
+
+**NO GENERA LA TABLA DE FRECUENCIAS ABSOLUTAS, ES SOLO PARA VER**
+
+
+```{r}
+#Tablas de frecuencias absolutas para cada variable
+summary(Beb_Energ)
+```
+
+Para calcular en un solo paso la table (**TABLA DE FRECUENCIAS ABSOLUTAS**) de cada variable, podemos usar la función **`apply()`** de la manera siguiente:
+
+```{r}
+#MARGIN=2 para que se aplique table() por columnas
+#Se genera la frec. abs. para cada una de las variables (factores)
+apply(Beb_Energ, MARGIN=2, FUN=table) 
+```
+
+De esta manera, obtenemos una **`list`** cuyas componentes son las tablas que queríamos.
+
+```{r}
+#se selecciona la varibales una vez obtenida la tabla de frec. abs. por variables
+apply(Beb_Energ,MARGIN=2,FUN=table)$sexo
+
+#Se obtiene lo mismo pero primero se selecciona la columna (variable) y luego se hace table()
+table(Beb_Energ$sexo)
+```
+
+Si aplicamos la función **`table()`** a un data frame de variables cualitativas, obtenemos su tabla de frecuencias absolutas, con las variables ordenadas tal y como aparecen en el data frame.
+
+
+```{r}
+#Como lo hemos hecho con anterioridad
+table(Beb_Energ)
+```
+
+O también podemos hacer...
+
+```{r}
+#table() respecto al estudios y el sexo, tabla bidimensional
+table(Beb_Energ[c(1,3)])
+```
+
+Una tercera opción es usar la función **`ftable()`**, que produce la misma tabla de frecuencias pero en formato plano.
+
+```{r}
+ftable(Beb_Energ)
+```
+
+

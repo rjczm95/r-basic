@@ -1,0 +1,105 @@
+---
+title: "Estadística Descriptiva con Datos Cualitativos"
+author: "Ramon Ceballos"
+date: "25/1/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# ESTADÍSTICA MULTIDIMENSIONAL. TABLAS DE FRECUENCIAS MULTIDIMENSIONALES
+
+## 1. Datos multidimensionales
+
+En general, se pueden calcular tablas de frecuencia de cualquier nº de variables. El maneja de estas tablas multidimensionales es similar al manejo de tablas bidimensionales.Hemos de tener en cuenta que cuantas más variables haya en una tabla de frecuencias, mayor será el nº de frecuencias marginales.
+
+## 2. Análisis estadístico de tres variables. Tres dimensiones
+
+**Ejemplo con tres dimensiones***
+
+Se definen tres variables cualitativas distintas en las que se recogen las respuestas, el género de las personas que dan las respuestas y los lugares en los que se dió dicha respuesta.
+
+```{r}
+#PRIMERA VARIABLE
+#Respuestas con valores "sí" y "no"
+ans = sample(c("Si", "No"), size = 100, replace = TRUE)
+
+#SEGUNDA VARIABLE
+#Género de las personas que contestan; "H" y "M" (hombre y mujer)
+sex = sample(c("H", "M"), size = 100, replace = TRUE)
+
+#TERCERA VARIABLE
+#Lugar donde se realiza la respuesta
+place = sample(c("San Francisco", "Barcelona", 
+                 "Valencia", "Cobija", "Asturias"), size = 100, replace = TRUE)
+```
+
+### Frecuencias absolutas
+
+Se realiza con la función **table()** una tabla de **frecuencias absolutas** para el ordenamiento siguiente: 1-género; 2-respuestas; 3-lugar.
+
+Se obtienen cinco tablas de frecuencias bidimensionales, una para cada lugar. Por tanto, se obtiene una lista de tablas bidimensionales, separando la población según los niveles de la tercera variable (en este caso, lugar).
+
+```{r}
+#FRECUENCIAS ABSOLUTAS
+table(sex, ans, place)
+
+```
+
+Se puede obtener esta misma tabla de frecuencias en formato plano con la función **ftable()** que viene de flat table. Este formato junta la población sin separarlo en tablas bidimensionales, siendo más dificil de leer.
+
+En esta función **ftable()** se puede especificar que variable queremos que aparezca como fila y que variable como columna. Para ello aparezcan en las columnas las variables género y respuesta asignamos `col.vars = c("sex","ans")`.
+
+```{r}
+ftable(sex, ans, place)
+ftable(sex, ans, place, col.vars = c("sex", "ans"))
+```
+
+**Filtrar las variables de una tabla de frecuencias tridimensional**
+
+Se deben poner entre corchetes una condición para cada una de las variables.
+
+```{r}
+#para mujeres que responden si en san francisco
+table(sex, ans, place)["M", "Si", "San Francisco"]
+
+#Para todos los géneros que responden si en valencia
+table(sex, ans, place)[ , "Si", "Valencia"]
+
+#para toda la gente que dice que no en cualquier lugar
+table(sex, ans, place)[ , "No", ]
+
+#para las mujeres que respondieron en cobija con independencia de la respuesta
+table(sex, ans, place)["M", , "Cobija"]
+```
+
+### Frecuencias relativas
+
+Se podría hacer la frecuencia relativa marginal de las respuestas de la combinación de género y lugar.
+
+Se utiliza **prop.table()** respecto a table() que da la table de frecuencias absolutas, y se iguala el **margin** a la dimensión o combinación de dimensiones respecto a la que se quiere calcular la **frecuencia relativa marginal**. Si no se especifica el **margin** se obtendrán las **frecuencias relativas globales**.
+
+```{r}
+prop.table(table(sex, ans, place))#Frec. Rel. Globales
+
+#Da la frecuencia relativa de cada lugar
+prop.table(table(sex, ans, place), margin = 3) # Frec. Rel. Marginal por Lugar/ciudad
+
+#Da el % de mujeres dentro de mujeres y por otro lado el % hombres dentro 
+#de hombres que respondieron si o no en el lugar concreto
+prop.table(table(sex, ans, place), margin = c(1, 3)) # Frec. Rel. Marg. por Sexo/genero y País
+```
+
+Se puede aplicar la función **ftable()** para una tabla de frecuencias relativas. Queda toda la información resumida dentro de una tabla única.
+
+```{r}
+ftable(prop.table(table(sex, ans, place)))
+```
+
+A medida que la dimensión crece, es más dificil de describir los datos de manera coherente.
+

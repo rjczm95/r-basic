@@ -1,0 +1,55 @@
+---
+title: "Estadística descriptiva con datos cuantitativos"
+author: "Ramon Ceballos"
+date: "30/1/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# EJERCICIO FINAL EN R
+
+Vamos a llevar a cabo el presente ejercicio con un data frame que viene predefinido en R llamado *InsectSprays*. Este dataset proporciona información acerca de la efectividad de una serie de insecticidas en agricultura.
+
+Cargamos los datos del dataset utilizado de estudio y los estudiamos.
+
+```{r}
+data = InsectSprays
+head(data)
+str(data)
+```
+
+Tenemos una columna que cuenta los insectos muertos y otra con el tipo de insecticida utilizado.
+
+Resumen de los estadísticos básicos con la función summary.
+
+```{r}
+by(data$count, data$spray, FUN=summary)
+```
+
+Para ver la desviación típica de los datos empleo lo siguiente:
+
+```{r}
+aggregate(count~spray, 
+          data = data, 
+          FUN = function (x) {c(media = mean (x),d_tipica = sd (x))})
+```
+
+Represento el boxplot para ver mejor los datos representados en el DF.
+
+```{r}
+boxplot(count~spray, 
+        data = data, 
+        col = "lightgreen",
+        xlab = "Tipo de Spray", 
+        ylab = "Insectos muertos",
+        main = "Boxplot para InsectSprays")
+```
+
+
+

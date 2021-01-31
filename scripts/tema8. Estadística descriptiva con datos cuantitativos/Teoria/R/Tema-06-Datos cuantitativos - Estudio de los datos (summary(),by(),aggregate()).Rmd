@@ -1,0 +1,132 @@
+---
+title: "Estadística descriptiva con datos cuantitativos"
+author: "Ramon Ceballos"
+date: "30/1/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Funciones para estudiar datos cuantitativos de forma estadística 
+
+## 1. **Función summary()**
+
+La función **`summary()`** aplicada a un vector numérico o a una variable cuantitativa nos devuelve un resumen estadístico con los valores mínimo y máximo del vector, sus tres cuartiles y su media.
+
+Al aplicar esta función a un data frame, esta se aplica a todas sus variables de forma simultánea. De este modo, podemos observar rápidamente si hay diferencias notables entre sus variables numéricas.
+
+### Ejemplo 1
+
+```{r}
+#Cargamos el data frame
+cangrejos = read.table("../../../data/datacrab.txt", header = TRUE) 
+
+#Eliminamos la primera columna
+cangrejos = cangrejos[-1] 
+
+#Aplicamos la función summary
+summary(cangrejos) 
+```
+
+Si nos interesase comparar numéricamente los pesos (weight) y las anchuras (width) de los cangrejos con 3 colores con los que tienen 5 colores, utilizaríamos las siguientes instrucciones:
+
+```{r}
+#summarize() para cangrejos de tres colores
+summary(subset(cangrejos, color == 3,c("weight","width")))
+
+```
+
+```{r}
+#summarize() para cangrejos de cinco colores
+summary(subset(cangrejos, color == 5,c("weight","width")))
+```
+
+Se deduce así que los cangrejos con 5 colores pesan ligeramente menos y tienen menos anchura que los que tienen 3 colores. 
+
+## 2. **Función by()**
+
+La función **`by()`** se utiliza para aplicar una determinada función a algunas columnas de un data frame segmentándolas según los niveles de un factor.
+
+La sintaxis de esta función es **`by(columnas, factor, FUN = función)`**.
+
+Con lo cual, haciendo uso de la función **`by`** y especificando **`FUN = summary`**, podremos calcular el resumen estadístico anteriormente comentado a subpoblaciones definidas por los niveles de un factor.
+
+### Ejemplo 2
+
+Para este ejemplo, haremos uso del famoso dataset iris.
+
+Si nos interesase calcular de forma rápida y sencilla las longitudes de sépalos y petalos en función de la especie, necesitaríamos hacer uso de la instrucción mostrada a continuación. 
+
+Por motivos de espacio, no se muestran los resultados proporcionados por R.
+
+```{r}
+#Selección de las columnas 1 (sepal.length) y 3 (petal.length)
+#Agrupo por especies (iris$species)
+#Aplico la función summary()
+by(iris[,c(1,3)], iris$Species, FUN = summary)
+```
+
+## 3. **Función aggregate()**
+
+Tanto la función **`by`** como la función **`aggregate`** son equivalentes. No obstante, los resultados se muestran de forma diferente en función de cual utilicemos.
+
+En el caso del ejemplo anterior, convenía más hacer uso de la función **`by`**.
+
+Podéis comprobarlo introduciendo por consola la siguiente instrucción:
+
+```{r}
+# Agrego sepal.length y petal.length a las especies de iris
+#tomo los datos recogidos en iris
+#aplico summary()
+aggregate(cbind(iris$Sepal.Length,iris$Petal.Length)~iris$Species, 
+          data = iris, FUN = summary)
+```
+
+## 4. Valores NA
+
+La mayoría de las funciones vistas a lo largo de este tema no funcionan bien con valores **`NA`**.
+
+Para no tenerlos en cuenta a la hora de aplicar estas funciones, hay que especificar el parámetro **`na.rm = TRUE`** en el argumento de la función.
+
+```{r}
+x = c(1,2,3,NA)
+sum(x)
+sum(x, na.rm = TRUE)
+mean(x)
+mean(x, na.rm = TRUE)
+var(x)
+var(x, na.rm = TRUE)
+sd(x)
+sd(x, na.rm = TRUE)
+```
+
+### Ejemplo 3
+
+Importa especificar na.rm =TRUE en las diversas funciones que empleemos para obtener medidas estadísticas.
+
+```{r}
+#Defino una semilla
+set.seed(0)
+
+#creo la variable dado2
+dados2 = sample(1:6,15, replace = TRUE)
+dados2
+
+#anulo la semilla
+set.seed(NULL)
+```
+
+```{r}
+dadosNA = c(dados2,NA)
+dadosNA
+mean(dadosNA)
+mean(dadosNA, na.rm = TRUE)
+```
+
+
+

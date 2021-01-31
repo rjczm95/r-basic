@@ -1,0 +1,123 @@
+---
+title: "Estadística descriptiva con datos ordinales"
+author: "Ramon Ceballos"
+date: "29/1/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# EJEMPLO FINAL
+
+Consideremos el data frame **`datacrab`** (medidas de los cangrejos) y arreglemos los datos.
+
+```{r}
+#cargar el fichero datacrab
+crabs = read.table("../../../data/datacrab.txt", header = TRUE)
+
+#veo cual es la estructura de la tabla cargada
+head(crabs,4)
+
+#Omito la primera columna porque no aporta información útil (data wringling)
+crabs = crabs[,-1] #Omitimos la primera columna
+
+#Observo de nuevo el DF
+head(crabs,4)
+
+#Observo la estructura del DF
+#Son variables numéricas
+str(crabs)
+```
+
+La variable numérica **`width`** contiene la anchura de cada cangrejo. A priori no parece que sea una variable ordinal.
+
+```{r}
+#Exploro específicamente la columna width
+table(crabs$width)
+```
+
+Vamos a convertir a la variable **`width`** en una variable ordinal que agrupe las entradas de la variable original en niveles. 
+
+La manera más sencilla de llevarlo a cabo es utilizando la función **`cut()`**, que estudiaremos en detalle en lecciones posteriores. Por ahora, basta con saber que la instrucción dividirá el vector numérico **`crabs$width`** en intervalos de extremos los puntos especificados en el argumento **`breaks`**. El parámetro **`right = FALSE`** sirve para indicar que los puntos de corte pertenecen la intervalo de su derecha o izquierda, e **`Inf`** indica $\infty$.
+
+Por lo tanto, nosotros llevaremos a cabo la siguiente instrucción.
+
+```{r}
+#En este caso los ptos de corte no estan incluidos en el intervalo que definen
+#Están incluidos en el siguiente intervalo
+#Se pueden establecer etiquetas (labels)
+intervalos = cut(crabs$width, 
+                 breaks = c(21,25,29,33,Inf), 
+                 right = FALSE, 
+                 labels = c("21-25", "25-29", "29-33", "33-..."))
+```
+
+El resultado de la instrucción es un factor que tiene como niveles estos intervalos, identificados con las etiquetas especificadas en el parámetro `labels`. Como nostros vamos a usar estos intervalos como niveles de una variable ordinal, además convertiremos este factor en ordenado.
+
+```{r}
+#Se aplica al rango de la variable que queremos transformar a ordinal
+#un ordered() del parámetros creado anteriormente
+#Se genera una nueva columna en el DF llamada width.rank (última columna)
+crabs$width.rank = ordered(intervalos)
+str(crabs)
+```
+
+Nos interesa estudiar la distribución de las anchuras de los cangrejos según el número de colores. Por lo tanto, vamos a calcular las tablas bidimensionales de frecuencias relativas y relativas acumuladas de los intervalos de las anchuras en cada nivel de **`color`** y las representaremos por medio de diagramas de barras.
+
+La tabla de frecuencias absolutas de los pares se puede obtener aplicando **`table()`** al data frame formado por la primera columna (color) y última columna (width.rank).
+
+**Tabla de frecuencias absolutas**
+
+```{r}
+#Tabla bidimensional (colores vs width.rank)
+Tabla = table(crabs[,c(1,6)]) 
+Tabla #FREC. ABS.
+```
+
+**Tabla de frecuencias relativas marginales por fila**
+
+```{r}
+Fr.rel = round(prop.table(Tabla,margin = 1),3)
+Fr.rel #FREC. REL. MARG. POR FILAS (COLOR)
+```
+
+**Tabla de frecuencias relativas marginales por fila acumuladas**
+
+```{r}
+Fr.rel.acu = round(apply(prop.table(Tabla, margin = 1), MARGIN = 1, FUN = cumsum), 3)
+t(Fr.rel.acu) #FREC. REL. MARG. POR FILAS ACUMULADA
+```
+
+**Diagrama de Barras de las frecuecnias relativas marginales por filas**
+
+```{r, fig.align='center',fig.width=10}
+#colores
+azul = c("cyan", "cyan4", "cyan1", "cyan3")
+
+#barplot 
+#se ha transpuesto la tabla de frecuencias para asignar los colores
+barplot(t(Fr.rel), 
+        beside = TRUE, 
+        legend = TRUE, 
+        ylim = c(0,1), 
+        col = azul, 
+        main = "Diagrama de barras de frecuencias relativas", 
+        args.legend=list(x = "topright", cex=0.9))
+```
+
+**Diagrama de Barras de las frecuecnias relativas marginales por filas acumuladas**
+
+```{r,fig.align='center',fig.width=10}
+barplot(Fr.rel.acu, 
+        beside = TRUE, 
+        legend = TRUE, 
+        col = azul, 
+        main = "Diagrama de barras de frecuencias relativas acumuladas", 
+        args.legend=list(x = "topleft", cex=0.65))
+```
+

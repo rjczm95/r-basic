@@ -1,0 +1,120 @@
+---
+title: "Estadística descriptiva con datos ordinales"
+author: "Ramon Ceballos"
+date: "29/1/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 1. Tablas multidimensionales para datos ordinales
+
+Para calcular frecuencias acumuladas en una tabla multidimensional, hay que aplicar a la tabla la función **`cumsum`** mediante la función **`apply`** que ya explicábamos para matrices. En este caso en concreto, la sintaxis de la instrucción sería: **`apply(tabla, MARGIN = ..., FUN = cumsum)`**
+
+En esta expresión, el valor **`MARGIN`** ha de ser el de la dimensión en la que queremos acumular las frecuencias: 1 si queremos hacerlo por filas, 2 para hacerlo por columnas (tambíén se podría hacer para una tercera variable y más). Lo veremos todo más claro con un ejemplo.
+
+### Ejemplo 1
+
+Se ha evaluado el tamaño de los cuellos de 100 jirafas. Los niveles que se han utilizado se los considera ordenados de la siguiente manera:
+
+$$\text{Muy.corto}<\text{Corto}<\text{Normal}<\text{Largo}<\text{Muy.largo}$$
+
+Los valores obtenidos en dicho estudio han sido los siguientes:
+
+```{r}
+set.seed(2018)
+
+longitud = sample(1:5,100, replace = TRUE)
+
+longitud = ordered(longitud)
+
+levels(longitud) = c("Muy.corto","Corto","Normal","Largo","Muy.largo")
+```
+
+```{r}
+#vector a estudiar del cuello de las jirafas
+longitud
+```
+
+Supongamos que en el ejemplo anterior, el de las jirafas, estas provienen de 4 zonas diferentes (A, B, C y D), de manera que las 30 primeras son de la zona A, las 25 siguientes de la B, las 35 siguientes de la C y las 10 últimas de la D. Nos interesa estudiar la distribución de las longitudes según la zona.
+
+Vamos a organizar todos estos datos en un data frame llamado **`jirafas`**. Para que nos sea más fácil visualizar la información, es conveniente que las filas de las tablas de frecuencias correspondan a las zonas. Por lo tanto, al definir el data frame, entraremos como primera variable la de la muestra las zonas. Así, conseguiremos que éstas aparezcan en las filas al aplicarle la función **table()**.
+
+```{r}
+#se define el array de zonas (no es un vector ordenado)
+zonas = rep(c("A","B","C","D"), c(30,25,35,10))
+
+#configuramos el DF jirafas
+jirafas = data.frame(zonas,longitud)
+
+#Se disciernen dos variabless, siendo:
+# - Un factor sin ordenar.
+# - Un factor ordenado.
+str(jirafas)
+
+head(jirafas,4)
+```
+
+**Tabla de frecuencias absolutas**
+
+Para calcular la tabla de frecuencias absolutas acumuladas de las longitudes por zonas y como las zonas definen las filas de la tabla anterior, debemos utilizar la función **`apply`** con **`MARGIN = 1`**.
+
+```{r}
+#Se generan las frecuencias acumuladas por zonas (A,B,C,D)
+apply(table(jirafas), MARGIN = 1, FUN = cumsum)
+```
+
+Fijaos que la tabla se ha traspuesto la fila y la columna. Resulta que cuando se aplica **`apply`** a una **`table`** bidimensional, R intercambia, en caso de ser necesario, filas por columnas en el resultado para que la dimensión de la tabla resultante en la que se haya aplicado la función sea la de las columnas.
+
+Con lo cual, para volver a tener las zonas en las filas, hay que **trasponer el resultado de la función `apply`**.
+
+```{r}
+#transpuesta de la tabla que genera las frecuencias acumuladas por zonas
+t(apply(table(jirafas), MARGIN = 1, FUN = cumsum))
+```
+
+**Tabla de frecuencias relativas acumuladas**
+
+Vamos ahora a calcular la tabla de frecuencias relativas acumuladas de las longitudes de cuello por zonas. Para conseguirlo, y en una única instrucción, primero calculamos la tabla de *frecuencias relativas por filas*, a continuación, con las funciones **`apply`** y **`cumsum`** las acumulamos y, finalmente, trasponemos el resultado.
+
+```{r}
+#Obtenemos la tabla de frecuecnias acumuladas por filas (zonas)
+t(apply(prop.table(table(jirafas), margin = 1), MARGIN = 1, FUN = cumsum))
+```
+
+**Diagrama de Barras por bloques**
+
+Vamos ahora a dibujar el diagrama de barras por bloques de esta tabla. Nos interesa que las barras de este diagrama se agrupen por zonas. Entonces, tendremos que aplicar **`barplot`** a la tabla sin trasponer.
+
+Además, vamos a colocar la leyenda en la esquina superior izquierda para que no se superponga a ninguna barra. También reduciremos el tamaño del texto de la leyenda para que quepa completamente.
+
+```{r,fig.align='center',fig.width=10}
+Diagrama = apply(prop.table(table(jirafas), margin = 1), MARGIN = 1, FUN = cumsum)
+
+barplot(Diagrama,
+        beside = TRUE, 
+        legend = TRUE, 
+        main = "Diagrama de barras de 
+        frecuencias relativas acumuladas de longitudes por zonas",
+        args.legend=list(x="topleft", cex=0.8))
+```
+
+Se ha representado con las frecuencias relativas acumuladas en vez de las absolutas, para poder comparar las zonas con mayor facilidad.
+
+```{r,fig.align='center',fig.width=10}
+Diagrama2 = t(prop.table(table(jirafas), margin = 1))
+
+barplot(Diagrama2,
+        beside = TRUE, 
+        legend = TRUE, 
+        main = "Diagrama de barras de 
+        frecuencias relativas de longitudes por zonas",
+        args.legend=list(x="topleft", cex=1),
+        col=c("black","brown","red","lightgreen","lightblue"),
+        ylim=c(0,0.6))
+```

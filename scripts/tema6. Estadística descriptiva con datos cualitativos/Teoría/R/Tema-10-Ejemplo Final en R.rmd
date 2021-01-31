@@ -1,0 +1,180 @@
+---
+title: "Estadística Descriptiva con Datos Cualitativos"
+author: "Ramon Ceballos"
+date: "26/1/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# EJEMPLO FINAL
+
+Vamos a llevar a cabo un análisis completo de un ejemplo con lo que hemos aprendido en esta lección y aprovecharemos para aprender algo nuevo.
+
+El objeto de datos **`HairEyeColor`** que lleva predefinido R es una tabla de frecuencias absolutas de tres variables cualitativas: color de cabello (`Hair`), color de los ojos (**`Eye`**) y sexo (**`Sex`**). 
+
+Vamos a extraer de esta tabla una *tabla bidimensional* de frecuencias absolutas de las variables **`Eye`** y **`Hair`**, sin distinguir según el sexo. La manera más sencilla de obtener esta tabla es sumando las subtablas de frecuencias para hombres y mujeres, y aplicando **`as.table()`** al resultado para transformarlo en una **`table`** por si no lo es.
+
+**Chunk para obtener una tabla que considere Eye y Hair únicamente**
+
+```{r}
+#Se obtienen las frecuecnias relativas absolutas
+ftable(HairEyeColor)
+
+#Extraigo todos los colores de pelo y ojos para los hombres
+male <- HairEyeColor[, ,"Male"]
+
+#Extraigo todos los colores de pelo y ojos para las mujeres
+female <- HairEyeColor[, ,"Female"]
+
+#Transformo los datos extraidos en una tabla conjunta haciendo la suma
+#Es como una matriz así que ocurre lo mismo que con las matrices
+#Tabla bidimensional del color de pelo y ojos
+data <- as.table(male+female)
+data
+```
+
+```{r}
+#Es la misma tabla obtenida de otra manera
+HEC=as.table(HairEyeColor[ , , 1]+ HairEyeColor[ , , 2])
+
+```
+
+Vamos a traducir al castellano los nombres de las variables de esta tabla y de sus niveles. Esto lo podemos llevar a cabo en un solo paso con la función **`dimnames()`** que ya usamos sobre data frames. El resultado de aplicar esta función a una table es una **`list`** cuyas componentes son los niveles de cada variable.
+
+```{r}
+#Veo que nombres tiene los niveles
+dimnames(HEC)
+```
+
+**Ejercicio.** Redefinid dicha **`list`** para tener los niveles de los factores en castellano</div>
+
+```{r}
+#Traduzco al castellano
+dimnames(HEC)=list(Cabello=c("Negro","Marron","Rojo","Rubio"), Ojos=c("Marrones","Azules","Pardos","Verdes"))
+HEC
+```
+
+**Chunk para manipulación de datos**
+
+```{r}
+#Para el otro ejercicio
+dimnames(data)=list(
+  Pelo = c("Negro","Marron","Pelirrojo","Rubio"),
+  Ojos= c("Marrones","Azules","Pardos","Verdes")
+)
+data
+```
+
+Vamos a dibujar un *diagrama de mosaico* de esta tabla, para visualizar gráficamente sus entradas.
+
+```{r}
+plot(data, color = ("lightblue"), main = "Diagrama de Mosaico de la tabla bidimensional")
+```
+
+A continuación, vamos a calcular el **número total de individuos** representados en esta tabla:
+
+```{r}
+#Suma total de todos los individuos del DataFrame
+sum (data)
+
+```
+
+Las **tablas de frecuencias absolutas y relativas** de cada variable. El color de ojos va en columnas (2º variable) y el color de pelo va en filas (1º variable).
+
+```{r}
+#Frecuencias absolutas para el color de ojos
+colSums(data)
+
+#Frecuencias absolutas para el color de pelo
+rowSums (data)
+
+#Frecuencias relativa para el color de ojos
+#prop.table(colSums(data))
+#redondeo a tres decimales
+round(prop.table(colSums(data)),3)
+
+#Frecuencias absolutas para el color de pelo
+#prop.table(rowSums(data))
+#redondeo a tres decimales
+round(prop.table(rowSums(data)),3)
+```
+
+Representaremos estas últimas en sendos **diagramas de barras**.
+
+```{r, fig.align='center', fig.width=10}
+
+#Establezco que habrá dos gráficos en la misma figura
+par(mfrow=c(1,2))
+
+#Represento el barplot del color de ojos (FREC. ABS.)
+barplot (prop.table(colSums(data)),
+         col = c("chocolate","lightblue","orange3","darkolivegreen3"),
+         ylim=c(0,0.4),
+         main = "Diagrama de Barras \n del color de ojos")
+
+#Represento el barplot del color de pelo (FREC. ABS.)
+barplot (prop.table(rowSums(data)),
+         col = c("gray16","chocolate","firebrick3","gold1"),
+         ylim=c(0,0.5),
+         main = "Diagrama de Barras \n del color de pelo")
+
+#cierro la figura
+par(mfrow=c(1,1))
+```
+
+En el diagrama anterior vemos que el color dominante de cabellos es el castaño, mientras que en el color de ojos el marrón y el azul están prácticamente empatados.
+
+Pasamos ahora a calcular las tablas de **frecuencias relativas** y dibujar los **dos diagramas de barras de las frecuencias relativas marginales**.
+
+```{r, fig.align='center',fig.width=10}
+#calculo la tabla de FREC. RELAT. de todo el DF
+round(prop.table(data),3)
+
+#Frencuencia con la que un color de pelo dado, tiene el color de ojos
+#calculo la tabla de FREC. RELAT. MARG. para las filas (MARGIN = 1)
+round(prop.table(data, margin = 1),3)
+
+#Frencuencia con la que un color de ojos dado, tiene el color de pelo
+#calculo la tabla de FREC. RELAT. MARG. para las columnas (MARGIN = 2)
+round(prop.table(data, margin = 2),3)
+
+
+
+#Establezco que habrá dos gráficos en la misma figura
+par(mfrow=c(1,2))
+
+#Represento el barplot (FREC. REL. MARG. FILAS)
+barplot (prop.table(data, margin = 1),
+         beside =TRUE,
+         col = c("gray16","chocolate","firebrick3","gold1"),
+         ylim=c(0,0.8),
+         main = "Frecuencias relativas del color de pelo\n para cada color de ojo",
+         legend.text = TRUE,
+         xlab = "Color de pelo")
+
+#Represento el barplot (FREC. REL. MARG. COLUMNAS)
+#!CUIDADO! Se representa la transpuesta ya que si no lo pintaría al reves (fila vs columna)
+barplot (t(prop.table(data, margin = 2)),
+         beside = TRUE,
+         col = c("chocolate","lightblue","orange3","darkolivegreen3"),
+         ylim=c(0,0.8),
+         main = "Frecuencias relativas del color de ojos\n para cada color de pelo",
+         legend.text = TRUE,
+         xlab = "Color de ojos")
+
+#cierro la figura
+par(mfrow=c(1,1))
+```
+
+Vemos que entre las personas de ojos azules, los cabellos rubios son los más frecuentes, y que entre las personas castañas el color de ojos más frecuente es el pardo.
+
+
+
+
+

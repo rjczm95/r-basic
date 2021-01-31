@@ -12,8 +12,8 @@ by(iris[,c(1,3)], iris$Species, FUN = summary)
 
 
 ```{r}
-aggregate(cbind(Sepal.Length,Petal.Length)~Species, 
-          data=iris, FUN=summary)
+aggregate(cbind(iris$Sepal.Length,iris$Petal.Length)~iris$Species, 
+          data = iris, FUN = summary)
 ```
 
 ```{r}

@@ -1,0 +1,237 @@
+---
+title: "Estadística descriptiva con datos cuantitativos"
+author: "Ramon Ceballos"
+date: "30/1/2021"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Medidas de centralización o de tendencia central
+
+Las **medidas de tendencia central** son las que dan *un valor* representativo a todas las observaciones. Algunas de las más importantes son:
+
+- La **media aritmética** o **valor medio**. Hay tres modos de obtener dicho parámetrpo estadístico.
+  - Sumar todos las `n` observaciones y dividirlas entre el nº de observaciones de `n` totales.
+  - Multiplicar cada nivel de la variable por su frecuencia absoluta y dividirla entre el nº de observaciones de `n` totales.
+  - Multiplicar cada nivel de la variable por su frecuencia relativa absoluta.
+$$\bar{x} = \frac{\sum_{i=1}^nx_i}{n}=\frac{\sum_{j=1}^kn_jX_j}{n}=\sum_{j=1}^kf_jX_j$$
+- La **mediana**, que representa el valor central en la lista ordenada de observaciones.
+- La **moda** es el valor (o valores) de máxima frecuencia (absoluta o relativa, el resultado será el mismo).
+
+En el mundo de la estadística existen diversos tipos de medias entre las que podemos citar la media aritmética, la media geométrica y la media armónica.
+
+### Ejemplo 1
+
+Recordemos el ejemplo de las edades.
+
+```{r}
+#vector de edades
+edad = c(15,18,25,40,30,29,56,40,13,27,42,23,11,26,25,32,30,40,33,29)
+
+sort(edad) #Ordenamos los datos por su orden natural
+
+#Tabla de frecuencias absolutas
+table(edad)
+```
+
+En este caso, la moda es 40, la mediana es $\frac{29+29}{2}=29$ y la media aritmética es:
+
+$\frac{11+13+15+18+23+25+25+26+27+29+29+30+30+32+33+40+40+40+42+56}{20}=29.2$
+
+
+### Ejemplo 2
+
+Recordemos el ejemplo de los dados.
+
+```{r}
+#Fijo una semilla
+set.seed(162017)
+
+#Vector determinado para el ejemplo
+dados = sample(1:6,25,replace = TRUE)
+dados
+
+#Anulo la semilla fijada
+set.seed(NULL)
+```
+
+```{r}
+dados.df = data.frame(Puntuacion = 1:6,
+                      Fr.abs = as.vector(table(dados)),
+                      Fr.rel = as.vector(round(prop.table(table(dados)),2)),
+                      Fr.acu = as.vector(cumsum(table(dados))),
+                      Fr.racu = as.vector(round(cumsum(prop.table(table(dados))),2)))
+
+dados.df
+```
+
+En este caso, la *moda* son dos valores: el 2 y el 3. La *mediana* es $x_{(13)}=$ 3 y la *media aritmética* es `r sum(dados)/length(dados)`.
+
+### Ejemplos 1 y 2 con R
+
+Vamos a calcular la media aritmética, mediana y moda de los dos ejemplos anteriores con instrucciones de R.
+
+```{r}
+mean(edad) #La media aritmética
+
+mean(dados) #La media aritmética
+
+median(edad) #La mediana
+```
+
+```{r}
+median(dados) #La mediana
+
+#La moda
+as.numeric(names(which(table(edad)==max(table(edad))))) #La moda
+
+#La moda
+as.numeric(names(which(table(dados)==max(table(dados)))))
+```
+
+Cuando trabajamos con datos cuantitativos, es conveniente que el resultado lo demos como un número. De ahí que hayamos aplicado la función **`as.numeric`**. La instrucción completa es: **`as.numeric(names(which(table("vector")==max(table("vector")))))`**.
+
+Otra forma de calcular la **moda** es cargar la **librería modeest** y emplea la función **mfv()**.
+```{r}
+vector2 <- c(2,3,5,7,9,7)
+library("modeest") # carga la biblioteca modeest
+mfv(vector2) # calcula la moda  
+```
+
+## 1. La mediana
+
+La definición formal de la *mediana* es la siguiente. Denotando por:
+
+$$x_{(1)}\le x_{(2)}\le\dots\le x_{(n)}$$ 
+
+los datos de la variable cuantitativa ordenados de menor a mayor, la mediana es:
+
+- Si $n$ par, es la media de los dos datos centrales: $$\frac{x_{(\frac{n}{2})}+x_{(\frac{n}{2}+1)}}{2}$$
+- Si $n$ impar,  es el dato central: $$x_{(\frac{n+1}{2})}$$
+
+
+## 2. Las diferentes medias en matemáticas
+
+En matemáticas y estadística, una media o promedio es una medida de tendencia central. Resulta al efectuar una serie determinada de operaciones con un conjunto de números y que, en determinadas condiciones, puede representar por sí solo a todo el conjunto. Existen distintos tipos de medias, tales como la media geométrica, la media ponderada y la media armónica aunque en el lenguaje común, tanto en estadística como en matemáticas la elemental de todas ellas es el término que se refiere generalmente a la media aritmética.
+
+Existen numerosos ejemplos de medias ${\displaystyle \scriptstyle {\bar {x}}=m_{i}(x_{1},\dots ,x_{n})}$, una de las pocas propiedades compartidas por todas las medias es que cualquier media está comprendida entre el valor máximo y el valor mínimo del conjunto de variables:
+
+$$\min\{x_{1},x_{2},\dots x_{n}\}\leq {\bar  {x}}\leq \max\{x_{1},x_{2},\dots x_{n}\}$$
+
+
+Además debe cumplirse que:
+
+$$ {\displaystyle {\bar {x}}=x_{1},\quad {\mbox{si}}\ x_{1}=x_{2}=\dots =x_{n}}$$
+
+### 2.1 Media Aritmética (mean)
+
+La media aritmética es un promedio estándar que a menudo se denomina promedio.
+
+$${\displaystyle {\bar {x}}={\frac {1}{n}}\sum _{i=1}^{n}{x_{i}}}$$
+
+La media se confunde a veces con la mediana o moda. La media aritmética es el promedio de un conjunto de valores, o su distribución; sin embargo, para las distribuciones con sesgo, la media no es necesariamente el mismo valor que la mediana o que la moda exponencial y de Poisson.
+
+Por ejemplo, la media aritmética de 34, 27, 45, 55, 22, 34 (seis valores) es: $${\displaystyle {\tfrac {34+27+45+55+22+34}{6}}\ ={\tfrac {217}{6}}\approx 36,167}$$
+
+### 2.2 Media Aritmética ponderada
+
+A veces puede ser útil otorgar pesos o valores a los datos dependiendo de su relevancia para determinado estudio. En esos casos se puede utilizar una media ponderada. Si ${\displaystyle X_{1},X_{2},\ldots ,X_{n}}$ es un conjunto de datos o muestra y ${\displaystyle w_{1},w_{2},\ldots ,w_{n}}$ son números reales positivos, llamados "pesos" o factores de ponderación, se define la media ponderada es decir que es relativa a esos pesos como:
+
+$${\displaystyle {\bar {X}}_{w}={\frac {X_{1}\cdot w_{1}+X_{2}\cdot w_{2}+\ldots +X_{n}\cdot w_{n}}{w_{1}+w_{2}+\ldots +w_{n}}}={\frac {\sum _{i=1}^{n}X_{i}\cdot w_{i}}{\sum _{i=1}^{n}w_{i}}}}$$
+
+La media es invariante frente a transformaciones lineales, cambio de origen y escala, de las variables, es decir si *X* es una variable aleatoria e *Y* es otra variable aleatoria que depende linealmente de *X*, es decir, **Y = a·XL + b** (donde a representa la magnitud del cambio de escala y b la del cambio de origen) se tiene que:
+
+$${\displaystyle {\bar {Y}}=a{\bar {X}}+b}$$
+
+### 2.3 Media Geométrica
+
+La *media geométrica* es un promedio muy útil en conjuntos de números que son interpretados en orden de su producto, no de su suma (tal y como ocurre con la media aritmética). Por ejemplo, las velocidades de crecimiento.
+
+Para obtenerlo se multiplican todas las observaciones de una variable cuantitativa y, tras ello, se realiza la raiz enesima, siendo n la longitud del vector que representa la variable.
+
+$${\displaystyle {\bar {x}}=\left(\prod _{i=1}^{n}{x_{i}}\right)^{1/n}}$$
+
+Por ejemplo, la media geométrica de la serie de números 1,2,3,4,5,9 (seis valores) es ${\displaystyle (1\cdot 2\cdot 3\cdot 4\cdot 5\cdot 9)^{1/6}=1080^{1/6}\approx 3,203}$.
+
+### 2.4 Media Armónica
+
+La m*edia armónica* es un promedio muy útil en conjuntos de números que se definen en relación con alguna unidad, por ejemplo la velocidad (distancia por unidad de tiempo).
+
+$${\displaystyle {\bar {x}}=n\cdot \left(\sum _{i=1}^{n}{\frac {1}{x_{i}}}\right)^{-1}}$$
+
+Por ejemplo, la media armónica de los números: 34, 27, 45, 55, 22, y 34 es:
+
+$${\displaystyle {\frac {6}{{\frac {1}{34}}+{\frac {1}{27}}+{\frac {1}{45}}+{\frac {1}{55}}+{\frac {1}{22}}+{\frac {1}{34}}}}\approx 33,018}$$
+
+**Ejemplo de las medias en R**
+
+Vamos a calcular las medias del vector `x` que está formado por `n` observaciones.
+
+```{r}
+x = c (32, 45, 67, 43, 28, 17, 48, 95)
+n = length(x)
+```
+
+Para la **media aritmética** se emplea lo siguiente.
+
+$$\bar{x} = \frac{1}{n}\sum_{i=1}^n x_i$$
+
+```{r}
+#Definición de la media aritmética
+sum(x)/n # mean
+```
+
+Para la **media aritmética ponderada** se emplea lo siguiente.
+
+$$\bar{x}_w = \frac{\sum_{i=1}^nw_i\cdot x_i}{\sum_{i=1}^n w_i}$$
+
+```{r}
+#pesos o valores de ponderación
+w = c(1, 2, 2, 3, 3, 2, 2, 1)
+
+#media aritmética ponderada
+sum(w*x)/sum(w)
+```
+
+Para la **media geométrica** se emplea lo siguiente.
+
+$$\bar{x}_G = \left(\prod_{i=1}^n x_i\right)^{1/n}$$
+
+```{r}
+#media geométrica
+#prod() da el productorio del vector
+prod(x)^(1/n)
+
+#da el mismo resultado así
+prod(x^(1/n))
+```
+
+Para la **media armónica** se emplea lo siguiente.
+
+$$\bar{x}_A = \frac{n}{\sum_{i=1}^{n}\frac{1}{x_i}}$$
+
+```{r}
+#media armónica
+n/sum(1/x)
+```
+
+
+## 3. Calcular el mínimo y el máximo de una variable cuantitativa
+
+Se emplean las funciones min() y max() de R.
+
+```{r}
+min(x)
+max(x)
+```
+
+
+
+

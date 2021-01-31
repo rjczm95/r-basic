@@ -1,0 +1,122 @@
+---
+title: "Estadística descriptiva con datos cuantitativos"
+author: "Ramon Ceballos"
+date: "30/1/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Ejercicio de analisis de rauw data de datos cuantitivos
+
+Carga el conjunto de datos de la carpeta data llamado grades.txt en R y responde a las siguientes preguntas.
+
+```{r}
+data = read.table("../../../data/grades.txt", header = TRUE)
+
+#Observo las primeras filas del DF
+head(data)
+
+#Observo la estructura del DF
+str(data)
+```
+
+**Preguntas de esta tarea**
+
+## 1. Calcula la media, la mediana y la moda redondeada a dos cifras decimales de las notas numéricas de los exámenes tanto de forma conjunta como por estudio universitario. ¿En qué grupo observamos la nota más alta? ¿Qué grupo está por encima de la media de estudiantes?
+
+```{r}
+#CALCULOS PARA EL CONJUNTO DE NOTAS RECOGIDAS CON INDEPENDENCIA DE LA CARRERA SELECCIONADA
+
+c(MEDIA = round(mean(data$nota),2),
+MEDIANA = round(median(data$nota),2),
+MODA = round(as.numeric(names(which(table(data$nota)==max(table(data$nota))))),2)) 
+
+
+#CALCULOS PARA EL CONJUNTO DE NOTAS RECOGIDAS POR ESTUDIOS UNIVERSITARIOS
+##MEDIA
+round(by(data$nota, data$estudio,  FUN = mean),2)
+##MEDIANA
+round(by(data$nota, data$estudio,  FUN = median),2)
+##MODA
+by(data$nota,data$estudio, FUN=function(x){as.numeric(names(which(table(x)==max(table(x)))))})
+
+
+```
+
+```{r}
+#Averiguar la nota más alta de cada estudio universitario
+by(data$nota, data$estudio,  FUN = max)
+```
+
+## 2. ¿En qué grupo observamos más variación de notas? Justifica tu respuesta
+
+```{r}
+#Averiguar que grupo tiene más variación de notas
+by(data$nota, data$estudio,  FUN = sd)
+```
+
+
+## 3. ¿Hay mucha diferencia entre el grupo que has respondido en el ejercicio 1 y en el ejercicio 2? Intenta dar una explicación objetiva del suceso
+
+```{r}
+summary(data[data$estudio=="Mates",])
+```
+
+```{r}
+summary(data[data$estudio=="Industrial",])
+```
+```{r}
+summary(data[data$estudio=="Informatica",])
+```
+
+```{r}
+summary(data[data$estudio=="Telematica",])
+```
+
+## 4. Dibuja en un único gráfico los cuatro diagramas de caja, uno para cada grupo. Añade así mismo la nota media, pon nombre, título y color al gráfico para documentar el gráfico correctamente.
+
+```{r, fig.align='center',fig.height=6}
+#Boxplot de notas para cada estudio universitario
+boxplot(data$nota~data$estudio,
+        ylab = "Notas",
+        xlab = "Estudios universitarios",
+        mean = "Boxplot de notas para cada estudio universitario",
+        col = "lightblue",
+        notch = TRUE)
+
+media = aggregate(data$nota~data$estudio, FUN =mean)
+
+points (media, col = "red", pch =16)
+```
+
+
+
+
+## 5. ¿Observas algunos valores atípicos en el boxplot anterior? ¿A qué grupo pertence?
+
+
+```{r}
+str(boxplot(data$nota~data$estudio,
+        ylab = "Notas",
+        xlab = "Estudios universitarios",
+        mean = "Boxplot de notas para cada estudio universitario",
+        col = "lightblue",
+        notch = TRUE))
+```
+
+
+
+## 6. Indica a partir del boxplot anterior en qué grupo observamos más variedad de notas.
+
+
+
+
+## 7. En base a todo lo anterior, ¿puedes afirmar de forma estadística que el examen de carrera ha ido mejor en algún estudio que en los demás?
+
+

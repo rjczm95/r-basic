@@ -1,0 +1,220 @@
+---
+title: "Datos cuantitativos agrupados"
+author: "Ramon Ceballos"
+date: "1/2/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# AGRUPAR DATOS EN R
+
+Al agrupar los datos, lo que hacemos es convertir nuestra variable cuantitativa en un factor cuyos niveles son las clases en que ha sido dividida e identificamos cada dato con su clase.
+
+A la hora de etiquetar los niveles, podemos elegir 3 codificaciones:
+
+- Los intervalos.
+- Las marcas de clase (el punto medio de cada intervalo).
+- El número de orden de cada intervalo.
+
+## 1. Agrupación en intervalos. Función cut()
+
+Esta función es la básica en R para agrupar un vector de datos numéricos y codificar sus valores con clases a las que pertenecen.
+
+Su sintaxis básica es:
+
+**`cut(x, breaks=..., labels=..., right=...)`**
+
+### 1.1. Parámetros de la función cut()
+
+- **`x`** es el vector numérico, nuestra variable cuantitativa
+- **`breaks`** puede ser un vector numérico formado por los extremos de los intervalos en los que queremos agrupar nuestros datos y que habremos calculado previamente. También puede ser un número $k$, en cuyo caso R agrupa los datos en $k$ clases. Para este caso, R divide el intervalo comprendido entre los valores mínimo y máximo de $x$ en $k$ intervalos y, a continuación, desplaza ligeramente el extremo inferior del primer intervalo a la izquierda y el extremo del último, a la derecha.
+- **`labels`** es un vector con las etiquetas de los intervalos. Su valor por defecto es utilizar la etiqueta de los mismos intervalos. Si especificamos `labels = FALSE`, obtendremos los intervalos etiquetados por medio de los números naturales correlativos, empezando por 1. Para utilizar como etiqueta las marcas de clase o cualquier otra codificación, hay que entrarlo como valor de este parámetro.
+- **`right`** es un parámetro que igualadao a `FALSE` hace que los intervalos que consideremos sean cerrados por la izquierda y abiertos por la derecha. Este no es su valor por defecto.
+- **`include.lowest`** igualdo a `TRUE` combinado con `right = FALSE` hace que el último intervalo sea cerrado. Puede sernos útil en algunos casos.
+
+### 1.2. Resultado de cut()
+
+En cualquier caso, el resultado de la función **`cut`** es una lista con los elementos del vector original codificados con las etiquetas de las clases a las que pertenecen. Bien puede ser un factor o un vector.
+
+**Ejemplo de la función `cut()`**
+
+```{r}
+#Cargo dataset de iris y lo guardo
+irisdf = iris
+
+#Selecciono una columna (variable) del dataset
+petals = iris$Petal.Length
+
+#Especifico nº divisiones para breaks
+#Aplico la función cut()
+#cerrado a la izda y abierto a la dcha
+#Cada dato queda catalagada para cada marca de clase
+irisdf$div1 = cut(petals, breaks = 5, right = FALSE)
+
+#Especifico nº divisiones para breaks
+#Aplico otro cut() empleando para break la regla de la raíz (13 intervalos)
+irisdf$div2 = cut(petals, breaks = ceiling(sqrt(length(petals))), right = FALSE)
+
+#Especifico un vector con los extremos de los intervalos en breaks
+irisdf$div3 = cut(petals, breaks = c(1,2,3,4,5,6,7), right = FALSE)
+
+#Igual que irisdf$div1 pero las etiquetas(labels) es FALSE
+#Da nºs del 1 al 5 (un nº entero por intervalo)
+irisdf$div4 = cut(petals, breaks = 5, right = FALSE, labels = FALSE)
+
+#Le doy nombres a cada intervalo
+irisdf$div5 = cut(petals, breaks = 5, right = FALSE, 
+    labels = c("Peq", "Norm", "Gran", "XGran", "Gigan"))
+
+#El dataset con las variables anteriores añadidas como columnas
+str(irisdf)
+```
+
+## 2. Frecuencias. Función hist()
+
+Una primera consideración es tratar las clases obtenidas en el paso anterior como los niveles de una variable ordinal y calcular sus frecuencias.
+
+- La frecuencia absoluta de una clase será el número de datos originales que pertenecen a dicha clase.
+- La frecuencia absoluta acumulada de una clase será el número de datos que pertenecen a dicha clase o alguna de las anteriores (se suman o heredan).
+
+### 2.1. Tabla de frecuencias
+
+Normalmente, las frecuencias de un conjunto de datos agrupados se suele representar de la siguiente forma:
+
+| Intervalos | $X_j$ | $n_j$ | $N_j$ | $f_j$ | $F_j$ |  
+|-------------------|--------------------|--------------------|--------------------|--------------------|--------------------|
+|$[L_1,L_2)$|$X_1$|$n_1$|$N_1$|$f_1$|$F_1$|
+|$[L_2,L_3)$|$X_2$|$n_2$|$N_2$|$f_2$|$F_2$|
+|$\vdots$|$\vdots$|$\vdots$|$\vdots$|$\vdots$|$\vdots$|
+|$[L_k,L_{k+1})$|$X_k$|$n_k$|$N_k$|$f_k$|$F_k$|
+
+En esta tabla cada columna representa:
+
+- *Intervalos*. Es la etiqueta de cada uno de los intervalos.
+- $X_j$. Es la marca de clase de cada intervalo.
+- $n_j$. Es la frecuencia absoluta.
+- $N_j$. Es la frecuencia absoluta acumulada.
+- $f_j$. Es la frecuencia relativa.
+- $F_j$. Es la frecuencia relativa acumulada.
+
+### 2.2. Función hist()
+
+El cálculo de las frecuencias con R podemos hacerlo mediante las funciones **`table`, `prop.table` y `cumsum`**.
+
+También podemos utilizar la función **`hist`**, que internamente genera una list cuya componente **`count`** es el vector de frecuencias absolutas de las clases. Por consiguiente, para calcular estas frecuencias, podemos utilizar la sintaxis:
+
+**`hist(x, breaks=..., right=FALSE, plot=FALSE)$count`**
+
+Conviene igualar el parámetro **`breaks`** al vector de los extremos del intervalo debido a que **`cut`** y **`hist`** hacen uso de diferentes métodos para agrupar los datos cuando se especifica solamente el número $k$ de clases.
+
+El resultado de **`hist`** incluye la componente **`mids`** que contiene el vector de puntos medios de los intervalos, es decir, nuestras marcas de clase.
+
+### 2.3. Tabla de frecuencias con R
+
+Podemos automatizar el cálculo de la ya tan mencionada tabla de frecuencias, utilizando las dos funciones que mostramos a continuación. 
+
+**PRIMERA FUNCIÓN**
+
+La *primera* sirve en el caso en que vayamos a tomar todas las **clases de la misma amplitud**. Sus parámetros son: **$x$**, el vector con los datos cuantitativos; **$k$**, el número de clases; **$A$**, su amplitud; y **$p$**, la precisión de los datos (p = 1 si la precisión son unidades, p = 0.1 si la precisión son décimas de unidad...).
+
+```{r}
+#Primera función
+#L refiere a los extremos de los intervalos de las clases a generar
+#xcut implementa la división de los datos según L con un cut()
+#intervals son los niveles que tiene el aagrupamiento
+#mc son las marcas de clase de cada intervalo
+TablaFrecs = function(x,k,A,p){ 
+  L = min(x)-p/2+A*(0:k)
+  x_cut = cut(x, breaks = L, right=FALSE)
+  intervals = levels(x_cut)
+  mc = (L[1]+L[2])/2+A*(0:(k-1))
+  Fr.abs = as.vector(table(x_cut)) 
+  Fr.rel = round(Fr.abs/length(x),4) 
+  Fr.cum.abs = cumsum(Fr.abs) 
+  Fr.cum.rel = cumsum(Fr.rel)
+  tabla = data.frame(intervals, mc, Fr.abs, Fr.cum.abs, Fr.rel, Fr.cum.rel)
+  tabla
+  }
+```
+
+**SEGUNDA FUNCIÓN**
+
+Por su parte, la *segunda* es para cuando **conocemos los extremos de las clases**. Sus parámetros son: **$x$**, el vector con los datos cuantitativos; **$L$**, el vector de extremos de clases; y **$V$** , un valor lógico, que ha de ser `TRUE` si queremos que el último intervalo sea cerrado, y `FALSE` en caso contrario.
+
+```{r}
+#Segunda función
+#xcut implementa la división de los datos según L conocido
+#intervals son los niveles que tiene el aagrupamiento
+#mc son las marcas de clase de cada intervalo
+TablaFrecs.L = function(x,L,V){
+  x_cut = cut(x, breaks=L, right=FALSE, include.lowest=V)
+  intervals = levels(x_cut)
+  mc = (L[1:(length(L)-1)]+L[2:length(L)])/2
+  Fr.abs = as.vector(table(x_cut)) 
+  Fr.rel = round(Fr.abs/length(x),4)
+  Fr.cum.abs = cumsum(Fr.abs)
+  Fr.cum.rel = cumsum(Fr.rel)
+  tabla = data.frame(intervals, mc, Fr.abs, Fr.cum.abs, Fr.rel, Fr.cum.rel)
+  tabla
+  }
+```
+
+
+#### **Ejemplo de funciones para las tablas de frecuencias**
+
+
+La tabla de frecuencias de la longitud de los pétalos de *Iris* es:
+
+
+```{r}
+#petals fue definido en el ejemplo de cut()
+
+TablaFrecs(petals, k = 6, A = 1, p = 0.1)
+TablaFrecs.L(petals, L = c(1,3,4,5,5.5,6,6.5,7), V = FALSE)
+```
+
+
+
+#### **Ejemplo completo**
+
+Vamos a considerar el conjunto de datos de `datacrab`. Para nuestro estudio, trabajaremos únicamente con la variable `width`.
+
+En primer lugar, cargamos los datos en un data frame:
+
+```{r}
+crabs = read.table("../../../../data/datacrab.txt", header = TRUE, sep = " ")
+
+cw = crabs$width
+```
+
+Siguiendo con el ejemplo de las anchuras de los cangrejos, vamos a calcular sus tablas de frecuencias haciendo uso de todo lo aprendido anteriormente.
+
+```{r}
+A = 1.3
+
+L1 = min (cw) - 1/ 2*0.1
+L = L1 + A*(0:10)
+L
+```
+
+
+Lo haremos con las funciones que os hemos proporcionado:
+
+```{r}
+TablaFrecs(cw,10,1.3,0.1)
+```
+
+
+```{r}
+TablaFrecs.L(cw,L,FALSE)
+```
+
+Fijaos que los intervalos no terminan de ser los que hemos calculado nosotros (L), pero eso se debe a como funciona la función `cut`.
+
+

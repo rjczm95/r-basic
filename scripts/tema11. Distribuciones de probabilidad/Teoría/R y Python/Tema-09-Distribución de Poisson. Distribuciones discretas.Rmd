@@ -1,0 +1,111 @@
+---
+title: "Introducción a distribuciones de probabilidad"
+author: "Ramon Ceballos"
+date: "7/2/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# **Distribución de Poisson**
+
+## 1. Conceptos teóricos y matemáticos
+
+Si **$X$** es variable aleatoria de Poisson con parámetro lambda cuando la variable aleatoria mide el "número de eventos que ocurren en un cierto intervalo de tiempo", diremos que **$X$** se distribuye como una Poisson con parámetro **$\lambda$**. La **$\lambda$** de la distribución de Poisson represente el nº de veces que se espera que ocurra el evento durante un intervalo de tiempo dado (o cualquier otra unidad de medida).
+
+$$X\sim \text{Po}(\lambda)$$
+
+donde **$\lambda$** representa el número de veces que se espera que ocurra el evento durante un intervalo dado.
+
+Vamos a definir algunas de las propiedades que tendrá una distribución
+Poisson.
+
+- El **dominio** de $X$ será $D_X = \{0,1,2,\dots\}$. Siguen siendo los nºs naturales.
+
+- La **función de probabilidad** vendrá dada por: $$f(k) = \frac{e^{-\lambda}\lambda^k}{k!}$$
+
+De este modo, cuando k tiende a infinito la probabilidad del suceso tenderá a cero.
+ 
+- La **función de distribución** vendrá dada por $$F(x) = \left\{
+\begin{array}{cl}
+     0 & \text{si } x<0 
+  \\ \sum_{k=0}^xf(k) & \text{si } 0\le x<n
+  \\ 1 & \text{si } x\ge n
+\end{array}
+\right.$$ 
+
+- **Esperanza**.  $E(X) = \lambda$.
+
+- **Varianza**.  $Var(X) = \lambda$.
+
+```{r, fig.align='center', fig.width=10}
+par(mfrow = c(1,2))
+
+#Distr. Poisson de parámetro 2
+#La lambda es 2
+plot(0:20, dpois(0:20,2),
+     col = "purple", xlab = "", 
+     ylab = "", 
+     main = "Función de probabilidad de una Po(2)")
+
+plot(0:20, ppois(0:20,2),col = "purple",
+     xlab = "", ylab = "", 
+     main = "Función de distribución de una Po(2)", 
+     ylim = c(0,1))
+par(mfrow= c(1,1))
+```
+
+Ejemplos: nºs de personas que entran en una tienda cada cierta unidad de tiempo (sería la frecuencia por unidad de medida); los errores de una página (unidad de medida son los errores por página).
+
+## 2. Distribución de Poisson en `R` y `Python`
+
+El código de la distribución de Poisson:
+
+- En **`R`** tenemos las funciones del paquete `Rlab`: **`dpois(x, lambda), ppois(q,lambda), qpois(p,lambda), rpois(n, lambda)`** donde `lambda` es el número esperado de eventos por unidad de tiempo de la distribución.
+- En `Python` tenemos las funciones del paquete **`scipy.stats.poisson`**: **`pmf(k,mu), cdf(k,mu), ppf(q,mu), rvs(M,mu)`** donde `mu` es el número esperado de eventos por unidad de tiempo de la distribución.
+
+## 3. Ejemplos en código para la distribución de Poisson (R y Python)
+
+Supongamos que **$X$** modela el número de errores por página que tiene un valor esperado **$\lambda = 5$** de errores.
+
+#### **Ejemplo en R**
+
+Empleamos las funciones anteriores.
+
+```{r, fig.align='center', fig.width=10}
+
+#defino la lambda
+l = 5
+
+#Defino la distribución de probabilidad para Poisson (5)
+plot(0:20, dpois(x = 0:20, lambda = l),
+     title("Distribución de probabilidad para Poisson (5)"),
+     xlab = "nº de errores",
+     ylab = "Probabilidad de que ocurra")
+
+#Defino la distribución de distribución para Poisson (5)
+plot(0:20,ppois(0:20, l),
+     title("Distribución de distribución para Poisson (5)"),
+     xlab = "nº de errores",
+     ylab = "Probabilidad acumulada de que ocurra")
+
+#La mediana
+qpois(0.5, 5)
+
+#Genero datos aleatorios con Poisson
+rpois(1000, lambda = l) -> data
+#Represento el histograma de los datos aleatorios
+hist(data, main = "Histograma para Poisson(2)")
+```
+
+#### **Ejemplo en Python**
+
+Vete al script de Python del presente tema 9.
+
+
+

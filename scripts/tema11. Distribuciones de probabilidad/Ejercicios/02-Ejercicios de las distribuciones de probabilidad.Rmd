@@ -1,0 +1,332 @@
+---
+title: "Ejercicios de distribuciones de probabilidad"
+author: "Ramon Ceballos"
+date: "10/2/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## 1. En una universidad, se sabe que el 25% de los alumnos realizan algún tipo de deporte. Se ha obtenido una muestra de 30 alumnos.
+
+**a. Si llamamos X a la variable aleatoria que cuenta el número de alumnos que realizan algún tipo de deporte, ¿qué tipo de distribución sigue X?**
+
+Se trata de una distibución binomial del tipo $B(30,0.25)$.
+
+**b. ¿Qué esperanza tiene X?**
+
+Conociendo que la esperanza de una binomial se define como $E(X)=p\cdot n$, entonces:
+
+```{r}
+#Muestra de alumnos
+n = 30
+
+#Probabilidad de que hagan deporte
+p = 0.25
+
+#Esperanza de esta binomial
+esp_bin = p*n
+esp_bin
+```
+
+
+**c. ¿Y varianza?**
+
+Conociendo que la esperanza de una binomial se define como $E(X)=p\cdot n\cdot q$, entonces:
+
+```{r}
+#Muestra de alumnos
+n = 30
+
+#Probabilidad de que hagan deporte
+p = 0.25
+
+#Probabilidad de que no hagan deporte
+q = 1-p
+
+#Varianza de esta binomial
+var_bin = p * n * q
+var_bin
+```
+
+**d. Calcula con R (o Python) la probabilidad de que más de 25 alumnos practiquen algún deporte.**
+
+```{r}
+#Mas de 25 alumnos que practiquen deporte
+x = 25
+
+#Parámetros de la binomial
+n=30
+p=0.25
+
+#Calculo la probabilidad acumulada para 25 alumnos, y se lo resto a 1
+1 - pbinom(25, size = n, prob = 0.25)
+
+```
+
+
+**e. Calcula con R (o Python) la probabilidad de que exactamente 15 alumnos practiquen algún deporte.**
+
+```{r}
+#15 alumnos que practiquen deporte
+x = 15
+
+#Parámetros de la binomial
+n=30
+p=0.25
+
+#Valor de función de probabilidad para 15 alumnos
+dbinom(15,30,0.25)
+```
+
+
+
+**f. Calcula con R (o Python) la probabilidad de que de 10 alumnos o menos practiquen algún deporte.**
+
+```{r}
+#Menos de 10 alumnos que practiquen deporte
+x = 10
+
+#Parámetros de la binomial
+n=30
+p=0.25
+
+#Calculo la probabilidad acumulada para 10 alumnos
+pbinom(10, size = n, prob = 0.25)
+
+```
+
+## 2. El número medio de accidentes de coche en la ciudad de Mahón en 2 meses es de 2 accidentes.
+
+**a. ¿Qué distribución sigue la v.a. que cuenta el número de accidentes en 2 meses?**
+
+Se trata de una distibución de Poisson del tipo $Po(2)$ para una unidad de tiempo de 2 meses.
+
+**b. Calcula la esperanza.**
+
+La esperanza de una distribución de Poisson es su parámetro lambda que en este caso es 2 para una unidad de tiempo de 2 meses.
+
+**c. Calcula con R (o Python) la probabilidad de que no ocurra ningún accidente en 2 meses.**
+
+```{r}
+#Defino parametro lambda
+lam = 2
+
+#Defino el suceso de estudio, 0 accidentes
+x = 0
+
+#Determino su probabilidad
+dpois(x=x, lambda = lam)
+```
+
+## 3. El 40% de un pueblo a las afueras de la ciudad de Pensilvania ve un concurso que dan por la tele. El concurso llama por teléfono a 15 personas del pueblo elegidas al azar. ¿De qué distribución se trata?
+
+Se trata de una distribución binomial del tipo $B(15,0.4)$, donde 15 es el número de intentos totales (llamadas) y 0.4 es la probabilidad de que alguién que esté viendo el programa coja el teléfono.
+
+
+## 4.En un bol muy grande tenemos, en total, 70 fresas, de entre las cuales 10 están podridas. Tomando un puñado de 20 fresas al azar y sin reemplazar ninguna de ellas, ¿qué distribución sigue la v.a. que cuenta el número de fresas podridas?
+
+**Da también la esperanza y la varianza de esta variable aleatoria.**
+
+La variable siguen una distribución hipergeométrica del tipo $X~H(10,60,20)$, siendo 10 las fresas que hay podridas (N), 60 el resto de fresas (M) y 20 las fresas que cogemos (n).
+
+La esperanza se calcula en base a la expresión:
+
+$$E(X) = \frac {n \cdot N}{N+M}$$
+
+```{r}
+#Defino los parámetros
+N = 10
+M = 60
+n = 20
+
+#Calculo la esperanza
+esp_bin2 = n * N / (N+M)
+esp_bin2
+```
+
+La varianza se calcula en base a la expresión:
+
+$$E(X) = \frac {n \cdot N \cdot M}{(N+M)^2} \cdot \frac {N+M-n}{N+M-1}$$
+
+```{r}
+#Defino los parámetros
+N = 10
+M = 60
+n = 20
+
+#Calculo la esperanza
+var_bin2 = (n*N*M/((N+M)^2))*((N+M-n)/(N+M-1))
+var_bin2
+```
+
+## 5. Un test de matemáticas consta de 200 preguntas de verdadero o falso. Para una persona que respondiese al azar, ¿qué distribución seguiría la v.a. que cuenta el número de preguntas acertadas?
+
+**Da también la esperanza y la varianza de esta variable aleatoria.**
+
+Se trata de una distribución binomial del tipo $B(200,0.5)$.
+
+Conociendo que la esperanza de una binomial se define como $E(X)=p\cdot n$, entonces:
+
+```{r}
+#Muestra 
+n = 200
+
+#Probabilidad 
+p = 0.5
+
+#Esperanza de esta binomial
+esp_bin = p*n
+esp_bin
+```
+
+Conociendo que la esperanza de una binomial se define como $E(X)=p\cdot n\cdot q$, entonces:
+
+```{r}
+#Muestra
+n = 200
+
+#Probabilidad 
+p = 0.5
+
+#Probabilidad 
+q = 1-p
+
+#Varianza de esta binomial
+var_bin = p * n * q
+var_bin
+```
+
+## 6. Un test de matemáticas consta de 200 preguntas. Cada pregunta consta de 4 posibles respuestas con solo una correcta. Para una persona que respondiese al azar, ¿qué distribución seguiría la v.a. que cuenta el número de preguntas acertadas? Da también la esperanza y la varianza de esta variable aleatoria.
+
+Se trata de una distribución binomial del tipo $B(200,0.25)$.
+
+Conociendo que la esperanza de una binomial se define como $E(X)=p\cdot n$, entonces:
+
+```{r}
+#Muestra 
+n = 200
+
+#Probabilidad 
+p = 0.25
+
+#Esperanza de esta binomial
+esp_bin = p*n
+esp_bin
+```
+
+Conociendo que la esperanza de una binomial se define como $E(X)=p\cdot n\cdot q$, entonces:
+
+```{r}
+#Muestra
+n = 200
+
+#Probabilidad 
+p = 0.25
+
+#Probabilidad 
+q = 1-p
+
+#Varianza de esta binomial
+var_bin = p * n * q
+var_bin
+```
+
+## 7. Un test de matemáticas consta de 200 preguntas de verdadero o falso. Para una persona que respondiese al azar y por orden, ¿qué distribución seguiría la v.a. que cuenta el número de preguntas respondidas hasta el primer acierto? Da también la esperanza y la varianza de esta variable aleatoria.
+
+Se trata de una distribución geométrica del tipo $Ge(0.5)$ para el nº de preguntas respondidas hasta el primer acierto.
+
+Conociendo que $E(X) = \frac{1}{p}$, entonces:
+
+```{r}
+#Probabilidad
+p = 0.5
+
+#Esperanza
+esp_geom = 1/p
+esp_geom
+```
+
+Conociendo que $Var(X) = \frac{1-p}{p^2}$, entonces:
+
+```{r}
+#Probabilidad
+p = 0.5
+
+#Varianza
+var_geom = (1-p)/(p^2)
+var_geom
+```
+
+## 8. Para evitar ser arrestado al pasar el control de seguridad, un viajero ha colocado 7 pastillas de droga en una botella que contiene 14 píldoras de vitaminas, las cuales son muy similares a las otras. Si el policía de turno selecciona 4 pastillas aleatoriamente para analizarlas, ¿qué distribución sigue la v.a. que cuenta el número de pastillas de droga?
+
+La variable siguen una distribución hipergeométrica del tipo $X~H(7,14,4)$, siendo 4 las pastillas de droga (N), 14 las pastillas de vitaminas (M) y 4 las pastillas que coge el policia (n).
+
+
+## 9. Un servicio dedicado a la reparación de aires acondicionados recibe de media 27 llamadas diarias. ¿Qué distribución sigue la v.a. que cuenta el número de llamadas diarias?
+
+Se trata de una distibución de Poisson del tipo $Po(27)$ para una unidad de tiempo de 1 día.
+
+
+## 10. Se lanza 53 veces un dado. ¿Qué distribución sigue la v.a. que cuenta cuántas veces ha salido un número impar? ¿Y la v.a. que cuenta el número de veces que ha salido un número par? ¿Y la v.a. que cuenta las veces que hemos obtenido exactamente el número "5"?
+
+En el primer caso (PAR) se trata de una binomial del tipo B (53, 0.5).
+
+En el segundo caso (IMPAR) se trata de una binomial del tipo B (53, 0.5).
+
+En el tercer caso (5) se trata de una binomial del tipo B (53, 1/6).
+
+
+## 11. El precio medio del litro de gasolina durante el próximo año se estima que puede oscilar entre 1.09€ y 2.53€. ¿De qué distribución de probabilidad se trata? Da la esperanza
+
+Se trata de una distribución continua del tipo Uniforme X~U(1.09, 2.53).
+
+La esperanza se calcula a partir de la expresión $E(X)=\frac{a+b}{2}$, donde a es 1.09 y b es 2.53
+
+```{r}
+#Parámetros
+a=1.09
+b=2.53
+
+#Esperanza
+esp_unif = (a+b)/2
+esp_unif
+```
+
+
+## 12. En una tienda del centro comercial, el tiempo medio de cola para poder pagar en caja es de 7 minutos. ¿De qué distribución de probabilidad se trata? Da la esperanza y varianza
+
+Se trata de una distribución continua exponencial definida del siguiente modo: $X~Exp(7)$.
+
+La esperanza se calcula con la expresión $E(X)=1/\lambda$
+
+```{r}
+#Parámetros
+lam = 7
+
+#Esperanza
+esp_exp = 1/lam
+esp_exp
+```
+
+
+La varianza se calcula con la expresión $Var(X)=1/\lambda^2$
+
+```{r}
+#Parámetros
+lam = 7
+
+#Varianza
+var_exp = 1/lam^2
+var_exp
+```
+
+
+
+

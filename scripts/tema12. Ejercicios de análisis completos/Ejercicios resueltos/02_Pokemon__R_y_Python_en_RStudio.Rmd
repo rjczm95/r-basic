@@ -1,0 +1,116 @@
+---
+title: "Juntar R y Python con RStudio"
+author: "Ramon Ceballos"
+date: "11/2/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(reticulate)
+```
+
+# **A. Pokemon (Py -> R)**
+
+## 1. Generalidades para el uso inicial de Python en R
+
+Para poder trabajar con R y Python se emplea la librería "reticulate".
+
+Para ver que versión de Python se está utilizando, pon en la consola "Sys.which("python")" y te indicará el directorio de uso. Si quisiera emplear Python de anaconda u otra versión tendrá que especificar en la primer chunk del RMarkdown la expresión "use_python"("directorio/ananconda3/bin/python").
+
+```{python}
+#Para ver si funciona
+import pandas as pd
+```
+
+Ahora vamos a llamar a Python desde R para lo cuál empleamos "py()" de reticulate.
+
+
+## 2. Carga de dataset de Pokemon y modelado del dataset (selección) en Python
+
+Cargamos el csv de pokemon con pd.read_csv de pandas. Exploramos si se ha cargado bien el dataset.
+
+Vamos a filtrar el dataset con la siguiente chunk.
+
+Vamos a filtrar por los pokemon de la primera generación y luego con las columnas Type 1, Type 2 y Speed.
+
+Limpiamos los Na con la función de python dropna().
+
+```{python}
+pokemon = pd.read_csv("../../../data/Pokemon.csv")
+print(pokemon.shape)
+print(pokemon.head (4))
+
+pokemon = pokemon[pokemon['Generation'] == 1]
+print(pokemon.shape)
+
+pokemon = pokemon [["Type 1", "Type 2", "Speed"]]
+print(pokemon.shape)
+
+pokemon = pokemon.dropna()
+print(pokemon.shape)
+```
+
+## 3. Representar gráficas de los datos de Python en R
+
+Accedemos desde R a la variable creada en python empleando la expresión "py$objeto_python".
+
+Representamos con un histograma de R la columna de "Speed" de pokemon.
+
+```{r, fig.width=7, fig.height=4}
+hist(py$pokemon[,"Speed"],
+     breaks=9,
+     main="Histograma de velocidad de los pokemon")
+```
+
+
+# **B. Pokemon (R -> Py)**
+
+## 1. Carga de dataset de Pokemon y modelado del dataset (selección) en R
+
+Ahora vamos a importar datos en R y representaremos dichos datos a través de Python (lo contrario al apartado A).
+
+```{r}
+pokemon2 <- read.csv("../../../data/Pokemon.csv", header=TRUE)
+
+#Cargamos libreria tidyverse
+library(tidyverse)
+
+#Filtramos el dataset
+pokemon2 <- pokemon2 %>%
+  #Filtro
+  filter(Generation==1) %>%
+  #Selecciono las columnas
+  select(Type.1, Type.2, Speed) %>%
+  #Quito los NA
+  na.omit()
+
+#Ver estadísticos de cada variable
+summary(pokemon2)
+```
+
+## 2. Representar gráficas de los datos de R en Python
+
+Transmitir datos de R a Python con la expresión "r.dataset_R".
+
+```{python}
+print(r.pokemon2.head())
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,26 @@
+---
+title: "Introducción a distribuciones de probabilidad"
+author: "Ramon Ceballos"
+date: "7/2/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Distribuciones discretas en R
+
+R conoce las distribuciones de probabilidad más importantes. Las que hemos visto son las siguientes.
+
+Distribución |  Instrucción en R  |  Instrucción en Python  |  Parámetros                                
+--------------------|--------------------|--------------------|--------------------
+Bernoulli | `bern` | `scipy.stats.bernoulli` | probabilidad de éxito $p$
+Binomial | `binom` | `scipy.stats.binom` | tamaño de la muestra $n$ y probabilidad de éxito $p$
+Geométrica | `geom` | `scipy.stats.geom` | probabilidad de éxito $p$
+Hipergeométrica | `hyper` | `scipy.stats.hypergeom` | $N,M,n$
+Poisson | `pois` | `scipy.stats.poisson` | esperanza $\lambda$
+Binomial Negativa | `nbinom` | `scipy.stats.nbinom` | número de éxitos $r$ y probabilidad de éxito $p$

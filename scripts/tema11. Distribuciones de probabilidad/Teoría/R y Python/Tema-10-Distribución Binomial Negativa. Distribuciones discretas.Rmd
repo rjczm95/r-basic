@@ -1,0 +1,115 @@
+---
+title: "Introducción a distribuciones de probabilidad"
+author: "Ramon Ceballos"
+date: "7/2/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# **Distribución de Binomial Negativa**
+
+## 1. Conceptos teóricos y matemáticos
+
+Si **$X$** es una variable aleatoria que mide el "número de repeticiones hasta observar los **$r$** éxitos (nº determinado de éxitos) en ensayos de Bernoulli". Diremos que **$X$** se distribuye como una Binomial Negativa con parámetros **$r$** y **$p$**.
+
+$$X\sim\text{BN}(r,p)$$ 
+
+En esta expresión, $p$ es la probabilidad de éxito. Se determina el nº de éxitos, por ello el global será k-1. 
+
+Vamos a definir algunas de las propiedades que tendrá una distribución
+Binomial Negativa.
+
+- El **dominio** de $X$ será $D_X = \{r, r+1, r+2,\dots\}$. Partimos de $r$ que es el nº de éxitos que se quiere obtener.
+
+- La **función de probabilidad** vendrá dada por: $$f(k) = {k-1\choose r-1}p^r(1-p)^{k-r}, k\geq r$$
+
+Es un ajuste de la función de probabilidad de una binomial. El dominio debe de ser mayor o igual que el nº de exitos.
+ 
+- La **función de distribución** no tiene una expresión analítica. 
+
+- **Esperanza**. $E(X) = \frac{r}{p}$.
+
+- **Varianza**. $Var(X) = r\frac{1-p}{p^2}$.
+
+
+```{r, fig.align='center',fig.width=10}
+par(mfrow = c(1,2))
+
+#5 exitos en 20 intentos
+exitos = 5
+size = 20
+
+#Función de probabilidad
+plot(c(rep(0,exitos),exitos:(size+exitos)),
+     c(rep(0,exitos),dnbinom(0:size,exitos,0.5)),
+     col = "purple", 
+     xlab = "", ylab = "", 
+     main = "Función de probabilidad \n de una BN(5, 0.5)")
+
+#Función de distribución
+plot(c(rep(0,exitos),exitos:(size+exitos)), 
+     c(rep(0,exitos),pnbinom(0:size,exitos,0.5)),
+     col = "purple", 
+     xlab = "", ylab = "", 
+     main = "Función de distribución de una BN(5, 0.5)")
+
+par(mfrow= c(1,1))
+```
+
+Ejemplo: caja de cerillas de Banach (se coloca una caja de cerillas en cada bolsillo y elegía aleatoriamente hasta agotar las cajas); tenemos dos cajetillas de tabaco y vamos seleccionando aleatoriamente los cigarrillo y al acabar una d elas dos cajas ver cuál es el nº esperado.
+
+## 2. Distribución Binomial Negativa en `R` y `Python`
+
+El código de la distribución Binomial Negativa:
+
+- En **`R`** tenemos las funciones del paquete `Rlab`: **`dnbinom(x, size, prop), pnbinom(q, size, prop), qnbinom(p, size, prop), rnbinom(n, size, prop)`** donde `size` es el número de casos exitosos y `prob` la probabilidad del éxito.
+- En **`Python`** tenemos las funciones del paquete **`scipy.stats.nbinom`**: **`pmf(k,n,p), cdf(k,n,p), ppf(q,n,p), rvs(n,p)`** donde `n` es el número de casos exitosos y `p` la probabilidad del éxito.
+
+
+## 3. Ejemplos en código para la distribución Binomial Negativa (R y Python)
+
+Una compañía petrolera tiene una probabilidad p = 0,20 de encontrar petróleo al perforar un pozo. ¿Cuál es la probabilidad de que la empresa perfore x=20 pozos de encontrar petróleo r=3 veces?
+
+#### **Ejemplo en R**
+
+Empleamos las funciones anteriores.
+
+```{r, fig.align='center', fig.width=10}
+
+#defino los parámetros de la distr. bin. neg.
+n = 20 #nº de intentos
+r = 3 #nº éxitos
+p = 0.2 #probabilidad
+
+#Defino la función de probabilidad para Binomial negativa
+plot(r:n, dnbinom(x=r:n,size = r,prob=p),
+     title("Distribución de probabilidad para Binomial negativa \n con 3 éxitos en 20 intentos y prob. de 0.2"),
+     xlab = "nº de intentos",
+     ylab = "Probabilidad de éxito")
+
+#Defino la función de distribución para Binomial negativa
+plot(r:n,pnbinom(q=r:n, size = r,prob = p),
+     title("Distribución de distribución para Binomial negativa"),
+     xlab = "nº de intentos",
+     ylab = "Probabilidad acumulada de que ocurra")
+
+#La mediana
+qnbinom(p=0.5,size=r,prob = p)
+
+#Genero datos aleatorios con Binomial negativa
+rnbinom(10000,size=r,prob=0.2) -> data
+#Represento el histograma de los datos aleatorios
+hist(data, breaks = n,
+     main="Histograma de la distribución Binomial negativa")
+```
+
+#### **Ejemplo en Python**
+
+Vete al script de Python del presente tema 10.
+

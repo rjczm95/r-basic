@@ -1,0 +1,174 @@
+---
+title: "Ejercicios estandarización para distribución normal"
+author: "Ramon Ceballos"
+date: "9/2/2021"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Ejercicio 1
+
+La cantidad de tiempo (en horas) utilizada para completar un producto determinado sigue una distribución N(10, 2) . Calculad la probabilidad de que se tarde:
+
+a. Menos de 6 horas
+
+```{r}
+mu = 10
+sigma = 2
+
+#Estandarizado
+x1_standar = (6-mu)/sigma
+p1_standar = round(pnorm(x1_standar)*100,6)
+p1_standar
+
+
+#Sin estandarizar
+p1 = round(pnorm(6,mu,sigma)*100,6)
+
+sprintf("La probabilidad de que se complete en menos de 6 horas es %s por ciento",p1)
+```
+
+b. Entre 7 y 13 horas
+
+```{r}
+
+#Estandarizado
+x2a_standar = (13-mu)/sigma
+x2b_standar= (7-mu)/sigma
+p2_standar = round((pnorm(x2a_standar)-pnorm(x2b_standar))*100,6)
+p2_standar
+
+
+#Sin estandarizar
+p2 = round((pnorm(13, mu, sigma) - pnorm(7, mu, sigma))*100,6)
+
+sprintf("La probabilidad de que se complete en un tiempo comprendido entre 7 y 13 horas es %s por ciento",p2)
+
+
+```
+
+
+# Ejercicio 2
+
+El valor (en millones) de las ventas anuales realizadas en la Discográfica "Hasta quedarnos sin tímpanos" sigue un modelo normal de media igual a 200 y desviación típica igual a 40.
+
+a. Calcula la probabilidad de que el número de ventas sea exactamente igual a 200 (millones)
+
+```{r}
+#Tiende a cero al tratarse de una distribución continua
+  
+  
+```
+
+
+b. Calcula la probabilidad de que el número de ventas sea mayor que 250 (millones)
+
+```{r}
+#Estandarizado
+st1 = (250-200)/40
+1- pnorm(st1)
+
+#Sin estandarizar
+1 -pnorm(250,200,40)
+```
+
+
+c. Calcula la probabilidad de que el número de ventas sea menor o igual que 100 (millones)
+
+```{r}
+#Estandarizado
+st1 = (100-200)/40
+pnorm(st1)
+
+#Sin estandarizar
+pnorm(100,200,40)
+
+
+```
+
+# Ejercicio 3
+
+Las puntuaciones obtenidas en un examen tipo test realizado a un grupo de opositores se distribuyen normalmente con media 50 y desviación típica 6.5. Calculad:
+
+a. Probabilidad de tener una puntuación menor a 23 puntos.
+
+```{r}
+mu = 50
+sigma = 6.5
+
+#Estandarizado
+st1 = (23-50)/6.5
+pnorm(st1)
+
+#Sin estandarizar
+pnorm(23,50,6.5)
+pnorm(23,50,6.5)*100
+```
+
+
+b. Probabilidad de tener entre 27.3 y 43.1 puntos
+
+```{r}
+#Estandarizado
+st1 = (43.1-50)/6.5
+st2 = (27.3-50)/6.5
+pnorm(st1)-pnorm(st2)
+
+#Sin estandarizar
+pnorm(43.1,50,6.5) - pnorm(27.3,50,6.5)
+```
+
+c. Probabilidad de tener más de 62 puntos
+
+```{r}
+#Estandarizado
+st1 = (62-50)/6.5
+1-pnorm(st1)
+
+#Sin estandarizar
+1-pnorm(62,50,6.5)
+(1-pnorm(62,50,6.5))*100
+```
+
+
+d. Probabilidad de tener 3.2 puntos o menos
+
+```{r}
+#Estandarizado
+st1 = (3.2-50)/6.5
+pnorm(st1)
+
+#Sin estandarizar
+pnorm(3.2,50,6.5)
+(pnorm(3.2,50,6.5))*100
+```
+
+
+e. Hallad el número de puntos que se deben obtener para que la probabilidad de sacar menos de esa cantidad de puntos sea de 0.045
+
+```{r}
+#Se emplea la fórmula del cuantil
+qnorm(0.045,mu, sigma)
+
+```
+
+
+
+f. Repetid el apartado anterior, pero esta vez para obtener una probabilidad de 0.45
+
+```{r}
+#Se emplea la fórmula del cuantil
+qnorm(0.45,mu, sigma)
+
+```
+
+
+
+
+

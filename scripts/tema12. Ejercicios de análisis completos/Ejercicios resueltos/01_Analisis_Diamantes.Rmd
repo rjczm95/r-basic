@@ -1,0 +1,175 @@
+---
+title: "Analisis Diamantes _ Estadistica Descriptiva"
+author: "Ramon Ceballos"
+date: "10/2/2021"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Ejercicio de Diamantes en Python
+
+Se pueden instalar paquetes de Python en RStudio cargando la librería "reticulate" (library(reticulate)) y despues emplear la instrucción py_install().
+
+Una vez instalados, cargamos en RMarkdown diferentes paquetes de Python.
+
+```{python}
+import numpy as np
+import pandas as pd
+import matplotlib
+from ggplot import diamonds
+
+matplotlib.style.use("ggplot")
+```
+
+Una vez cargado el dataset diamonds, lo exploramos.
+
+```{python}
+#Dimensiones
+print(diamonds.shape)
+
+#Cinco primeras filas
+print(diamonds.head(5))
+```
+
+## Histograma
+
+Hacer el diagrama de una columna del dataset.
+
+```{python}
+#Representamos el histograma de la columna "carat"
+diamonds.hist(column="carat", 
+figsize=(8,3), 
+color="blue", 
+bins = 50, 
+range = (0,3.5))
+matplotlib.pyplot.title("Histograma de pesos de diamantes")
+matplotlib.pyplot.show()
+```
+
+## Filtro de outliers
+
+Filtramos en python para aquellos diamantes con un peso superior a 3.5. Estos son muy raros ya que ni aparecen en el histograma anterior.
+
+```{python}
+print(diamonds[diamonds["carat"]>3.5])
+```
+
+Este tipo de análisis sería conveniente para estudios específicos sobre este tipo de diamantes.
+
+## Boxplots
+
+Representar boxplots en Python, para una variable ("precios").
+
+Se podría hacer en función de otra variable, para ver diferentes boxplots comparandolos.
+
+```{python}
+#Limpia la figura anterior
+matplotlib.pyplot.clf()
+diamonds.boxplot(column = "price", 
+figsize = (8,8))
+
+matplotlib.pyplot.show()
+```
+
+La claridaad de los diamantes vs el precio de los mismos.
+
+```{python}
+matplotlib.pyplot.clf()
+diamonds.boxplot(column = "price", by = "clarity", 
+figsize = (8,8))
+
+matplotlib.pyplot.show()
+```
+
+Tamaño de los diamantes en relación a la claridad de los mismos.
+
+```{python}
+matplotlib.pyplot.clf()
+diamonds.boxplot(column = "carat", by = "clarity", 
+figsize = (8,8))
+
+matplotlib.pyplot.show()
+```
+
+## Densidades
+
+Densidad de la distribución subyacente para la columna carat de pesos.
+
+```{python}
+
+matplotlib.pyplot.clf()
+
+diamonds["carat"].plot(kind="density", 
+figsize=(8,8), 
+xlim=(0,5))
+
+matplotlib.pyplot.show()
+```
+
+
+## Tabla de frecuencias y Barplot
+
+Con pandas para tablas de frecuencias.
+
+Vamos a hacer la tabla de frecuencias absolutas y a posteirori dibujamos el barplot.
+
+```{python}
+#Tabla de frecuencias absolutas
+carat_table = pd.crosstab(index=diamonds["clarity"], columns="count")
+
+print(carat_table)
+
+
+matplotlib.pyplot.clf()
+
+carat_table.plot(kind="bar", figsize=(8,8))
+
+matplotlib.pyplot.show()
+```
+
+Tabla bidimensional de dos variables (claridad y color).
+
+```{python}
+#Frecuencias absolutas para tabla bidimensional
+carat_table_2 = pd.crosstab(index=diamonds["clarity"], columns=diamonds["color"])
+
+print(carat_table_2)
+
+
+matplotlib.pyplot.clf()
+
+#Barras apiladas (stacked=True)
+carat_table_2.plot(kind="bar", figsize=(8,8), stacked=True)
+
+matplotlib.pyplot.show()
+
+
+matplotlib.pyplot.clf()
+
+#Barras no apiladas
+carat_table_2.plot(kind="bar", figsize=(8,8), stacked=False)
+
+matplotlib.pyplot.show()
+```
+
+## Scatterplot
+
+Un gráfico de ptos de dispersión parat peso vs precio.
+
+Poner transparencia a los ptos para visualizar mejor las zonas donde se aglutinan ptos.
+
+```{python}
+matplotlib.pyplot.clf()
+
+diamonds.plot(kind="scatter", x = "carat", y = "price", figsize=(10,10), ylim=(0,20000), xlim = (0,6), alpha = 0.1)
+matplotlib.pyplot.show()
+```
+
+

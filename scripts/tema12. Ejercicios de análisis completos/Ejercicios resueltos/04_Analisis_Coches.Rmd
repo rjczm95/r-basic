@@ -1,0 +1,177 @@
+---
+title: "Analisis de los coches (mtcars)"
+author: "Ramon Ceballos"
+date: "11/2/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(reticulate)
+use_python("../../../../../../Desktop/Python 3.9/Python 3.9 (64-bit).lnk")
+```
+
+# **Análisis de los coches (mtcars)**
+
+## 1. Carga de datos
+
+Vamos a trabajar con Python.
+
+Importamos las librerías que vamos a usar en el análisis y cargamos los datos del dataset "mtcars" presente en ggplot.
+
+```{python}
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from ggplot import mtcars
+```
+
+Vemos si se han cargado los datos correctamente.
+
+```{python}
+data = mtcars
+print(data.head(4))
+```
+
+## 2. Medidas de centralización
+
+Vemos que el índice se asigna por números que pone Python. Vamos a asignar el índice según el nombre del modelo del coche.
+
+```{python}
+data.index = data["name"]
+```
+
+A continuación hago la **media** para cada una de las columnas numéricas.
+
+```{python}
+print(data.mean())
+```
+
+También se puede hacer la media por filas, aunque en este caso no tenga sentido.
+
+```{python}
+print(data.mean(axis=1))
+```
+
+La mediana de la distribución para cada columna sería:
+
+```{python}
+print(data.median())
+```
+
+La moda sería:
+
+```{python}
+print(data.mode())
+```
+
+
+## 3. Medidas vs Distribuciones
+
+La media y la mediana no siempre tienen que coincidir, y esto a su vez depende del sesgo de la distribución. Cuando la distribución es simétrica la mediana y la media coinciden. Cuando el sesgo es positivo o negativo, no coincidirán.
+
+Genero unos datos aleatorios segun una normal y represento un plot de la función de densidad de dichos datos. A su vez, le añado una línea que coincida con la media y la mediana.
+
+```{python}
+norm_data = pd.DataFrame(np.random.normal(size=10000))
+
+norm_data.plot(kind="density", figsize=(7,7))
+
+plt.vlines(norm_data.mean(), ymin=0, ymax=0.5, linewidth=6.0, color="green")
+
+plt.vlines(norm_data.median(), ymin=0, ymax=0.5, linewidth=2.0, color="red")
+
+plt.show()
+
+```
+
+Vemos que la distribución es simétrica ya que la media y la mediana se superponen.
+
+Limpio la figura con "plt.clf()" y represento unos datos de distribución exponencial de la misma forma que antes.
+
+```{python}
+skewed_data = pd.DataFrame(np.random.exponential(size=10000))
+
+skewed_data.plot(kind="density", figsize=(7,7))
+
+plt.vlines(skewed_data.mean(), ymin=0, ymax=1, linewidth=6.0, color="green")
+
+plt.vlines(skewed_data.median(), ymin=0, ymax=1, linewidth=2.0, color="red")
+
+plt.xlim(-2,5)
+
+plt.show()
+```
+
+Se observa que hay un sesgo positivo (asimetría hacia la dcha), y la mediana es más pequeña que la media.
+
+Ahora vamos a generar una distribución normal de 50 datos (norm_data) con una serie de outliers (outliers) que siguen una distribución normal con $\mu = 15$. Juntamos ambos datos en un Data Frame mediante np.concatenate, y para indicar que se haga por columnas se pone axis=0. 
+
+```{python}
+norm_data = np.random.normal(size=50)
+outliers = np.random.normal(15,size=3)
+
+combined_data = pd.DataFrame(np.concatenate((norm_data,outliers),axis=0))
+
+combined_data.plot(kind="density", figsize=(7,7))
+
+plt.vlines(combined_data.mean(), ymin=0, ymax=0.3, linewidth=6.0, color="green")
+
+plt.vlines(combined_data.median(), ymin=0, ymax=0.3, linewidth=2.0, color="red")
+
+plt.xlim(-5,20)
+
+plt.show()
+```
+
+Ahora la media aparece desplaza a la dcha, indicando la existencia de un sesgo. Esto se debe a los outliers que hemos incorporado. La mediana, por tanto, es más robusta que la media debido a que se resiente menos frente a la presencia de outliers. La media en cambio es muy sensible.
+
+Vamos a investigar si dentro del dataset de mtcars, la variable mpg (millas por galón) está sesgada o no.
+
+```{python}
+data_mpg = data [["mpg"]]
+
+data_mpg.plot(kind="density", title="Distribucion para las millas por galon")
+
+plt.vlines(data_mpg.mean(),
+color="green", linewidth=6,
+ymin=0, ymax=0.1)
+
+plt.vlines(data_mpg.median(),
+color="red", linewidth=2,
+ymin=0, ymax=0.1)
+
+plt.show()
+```
+
+Vemos que la media se encuentra desplazada ligeramente a la derecha, lo cual indica que hay un ligero sesgo positivo.
+
+Para al potencia (hp) lo desarrollaríamos de forma análoga.
+
+```{python}
+data_hp = data [["hp"]]
+
+data_hp.plot(kind="density", title="Distribucion para la potencia")
+
+plt.vlines(data_hp.mean(),
+color="green", linewidth=6,
+ymin=0, ymax=0.006)
+
+plt.vlines(data_hp.median(),
+color="red", linewidth=2,
+ymin=0, ymax=0.006)
+
+plt.show()
+```
+
+Tambié presenta un sesgo positivo la distribución de la variable de la potencia.
+
+
+
+
+
+
+

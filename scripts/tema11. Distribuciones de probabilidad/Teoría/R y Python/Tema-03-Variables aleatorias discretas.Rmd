@@ -1,0 +1,65 @@
+---
+title: "Introducción a distribuciones de probabilidad"
+author: "Ramon Ceballos"
+date: "6/2/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# VARIABLES ALEATORIAS DISCRETAS
+
+La primera familia dentro de las variables aleatorias que vamos a ver, es la variable aleatoria discreta.
+
+**Variable aleatoria discreta ($X$).** Una v.a. $X:\Omega\longrightarrow \mathbb{R}$ es discreta cuando $D_X$ (dominio de la variable aleatoria $X$) es finito o un subconjunto de $\mathbb{N}$ (nºs naturales). Esto quiere decir que el conjunto de elementos que componen dicha variable ($D_X$) es finito o bien es numerable. 
+
+## 1. Función de probabilidad
+
+**Función de probabilidad.** Es la función $f:\mathbb{R}\longrightarrow[0,1]$ definida por la probabilidad que la variable $X$ sea el valor de $x$: $$f(x) = p(X=x)$$
+
+Nótese que $f(x)=0$ si $x\not\in D_X$. Por tanto, interpretaremos la función de probabilidad se interpreta como la función que toma valores en el dominio de partida de la variable aleatoria $X$ cpmprendidos entre 0 y 1. $$f:D_X\longrightarrow [0,1]$$
+
+No se toman valores fuera del dominio, porque fuera de $D_X$ el valor siempre será 0.
+
+Hay que advertir que el concepto de función de probabilidad solo tiene sentido para variables aleatorias que toman un conjunto discreto de valores. Para variables aleatorias continuas, el concepto análogo es el de **función de densidad**.
+
+## 2. Esperanza
+
+Habiendo definido la función de probabilidad ($f:D_X\longrightarrow[0,1]$) tiene sentido definir la esperanza de una v.a. discreta.
+
+**Esperanza de una v.a. discreta.** Sea $f:D_X\longrightarrow[0,1]$ la función de probabilidad de $X$, entonces la esperanza respecto de la función de probabilidad es la suma ponderada de los elementos de $D_X$, multiplicando cada elemento $x$ de $D_X$ por su probabilidad. Matemáticamente se define como: $$E(X) = \sum_{x\in D_X}x\cdot f(x)$$
+
+Si existe una función (g) que se aplica sobre la variable aleatoria (g:$D_X$), el concepto  de esperanza es igual aunque habría que multiplicar la transformación de cada elemento x (g(x)) por su función de probabilidad (f(x)).
+
+Si $g:D_X\longrightarrow \mathbb{R}$ es una aplicación: $$E(g(X))=\sum_{x\in D_X}g(x)\cdot f(x)$$
+
+
+## 3. Varianza
+
+A partir del concepto de esperanza se obtiene la varianza.
+
+**Varianza de una v.a. discreta.** Sea $f:D_X\longrightarrow[0,1]$ la función de probabilidad de $X$, entonces la varianza respecto de la función de probabilidad es el valor esperado (esperanza) de la diferencia al cuadrado entre $X$ y su valor medio $E(X)$. Se define así: $$Var(X)= E((X-E(X))^2) = E(X^2)-(E(X))^2 $$
+
+La varianza mide como de variados son los resultados de $X$ respecto de la media.
+
+Si $X$ es una v.a. discreta y $g:D_X\longrightarrow \mathbb{R}$ una función cualquiera definida sobre el dominio de la variable aleatoria discreta X se define la varianza como: $$Var(g(X))=E((g(X)-E(g(X)))^2)=E(g(X)^2)-(E(g(X)))^2$$
+
+**Ejercicio.** Demostrar la siguiente igualdad. $$Var(X)= E(X^2)-(E(X))^2$$
+
+## 4. Desviación típica
+
+**Desviación típica de una v.a. discreta.** Sea $f:D_X\longrightarrow[0,1]$ la función de probabilidad de $X$, entonces la desviación típica respecto de la función de probabilidad es: $$\sigma(X)=\sqrt{Var(X)}$$
+
+Las unidades de la varianza son las de $X$ al cuadrado. En cambio, las de la desviación típica son las mismas unidades que las de $X$.
+
+Si $X$ es una v.a. discreta y $g:D_X\longrightarrow \mathbb{R}$ una función, pues: $$\sigma(g(X))=\sqrt{Var(g(X))}$$
+
+
+
+
+

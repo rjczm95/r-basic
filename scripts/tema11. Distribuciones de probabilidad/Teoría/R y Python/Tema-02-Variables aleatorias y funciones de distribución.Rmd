@@ -1,0 +1,56 @@
+---
+title: "Introducción a distribuciones de probabilidad"
+author: "Ramon Ceballos"
+date: "6/2/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# **VARIABLES ALEATORIAS Y FUNCIONES DE DISTRIBUCIÓN **
+
+## 1. Variables Aleatorias
+
+**Variable aleatoria**. Una variable aleatoria (v.a.) sobre $\Omega$ es una aplicación: $$X: \Omega\longrightarrow \mathbb{R}$$ que asigna a cada suceso elemental $\omega$ (dentro del espacio muestral $\Omega$) un número real $X(\omega)$.
+
+Puede entenderse como una descripción numérica de los resultados de un experimento aleatorio.
+
+**Dominio de una variable aleatoria.** $D_X$, es el conjunto de los valores que puede tomar la variable aleatoria X.
+
+### 1.1 Sucesos de variables aleatorias
+
+Una variable aleatoria puede definir sucesos, de los cuales queremos conocer la probabilidad $p$:
+
+- $p(X=a) = p(\{\omega\in\Omega \ |\  X(\omega) = a\})$
+- $p(X<b) = p(\{\omega\in\Omega \ |\  X(\omega) < b\})$
+- $p(X\le b) = p(\{\omega\in\Omega \ |\  X(\omega) \le b\})$
+- $p(a<X) = p(\{\omega\in\Omega \ |\  a<X(\omega)\})$
+- $p(a\le X) = p(\{\omega\in\Omega \ |\  a\le X(\omega)\})$
+- $p(a\le X\le b) = p(\{\omega\in\Omega \ |\  a\le X(\omega) \le b\})$
+- $p(a< X< b) = p(\{\omega\in\Omega \ |\  a< X(\omega) < b\})$
+- $p(X\in A) = p(\{\omega\in\Omega \ |\  X(\omega)\in A\})$
+
+## 2. Función de Distribución
+
+**Función de distribución de la v.a. $X$**. Es una función: $$F:\mathbb{R}\longrightarrow [0,1]$$ definida por $F(x)=p(X\le x)$.
+
+
+Sea $F$ una función de distribución de una v.a. $X$ y digamos: $$F(a^-)=\lim_{x\rightarrow a^-}F(x)$$
+
+- $p(X\le a)=F(a)$
+- $p(X<a)=\lim_{b\rightarrow a,\  b<a}p(X\le b) = \lim_{b\rightarrow a,\  b<a} F(b) = F(a^-)$
+- $p(X=a) = p(X\le a)-p(X<a)=F(a)-F(a^-)$
+- $p(a\le X\le b) = p(X\le b)-p(X< a)=F(b)-F(a^-)$
+
+## 3. Cuantiles
+
+**Cuantil de orden $p$ de una v.a. $X$**. Es el $x_p\in\mathbb{R}$ más pequeño tal que $F(x_p)\ge p$
+
+Nótese que la mediana es el cuantil de orden 0.5.
+
+

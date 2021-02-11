@@ -1,0 +1,77 @@
+---
+title: "Introducción a distribuciones de probabilidad"
+author: "Ramon Ceballos"
+date: "8/2/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Variable aleatoria continua
+
+## 1. Conceptos generales
+
+**Variable aleatoria continua.** Una v.a. $X:\Omega\longrightarrow\mathbb{R}$ es continua cuando su función de distribución (la acumulada) $F_X:\mathbb{R}\longrightarrow[0,1]$ es continua.
+
+En este caso, $F_X(x)=F_X(x^-)$ y, por este motivo, la probabilidad de tomar cualquier valor tiende a cero (baja probabilidad): $$p(X=x)=0\ \forall x\in\mathbb{R}$$
+Pero esto no significa que sean sucesos imposibles, ya que la probabilidad del suceso existe.
+
+## 2. Función de densidad
+
+**Función de densidad.** Función $f:\mathbb{R}\longrightarrow\mathbb{R}$ que satisface lo siguiente:
+
+- $f(x)\ge 0\ \forall x\in\mathbb{R}$. Nunca puede tomar un valor negativo.
+- $\int_{-\infty}^{+\infty}f(t)dt=1$. Es decir, el área bajo la curva es 1.
+
+Una función de densidad puede tener puntos de discontinuidad.
+
+Toda variable aleatoria **$X$** con una función de distribución del siguiente tipo (para cualquier densidad $f$ es una v.a. continua):
+
+$$F(x)=\int_{-\infty}^{x}f(t)dt\ \forall x\in\mathbb{R}$$ 
+
+La expresión de arriba se defino como la integral entre $-\inf$ y $x$ de la densidad ($f(t)dt$). Esto significa que la función de distribución ($F(x)$) acumula el área bajo la densidad desde $-\inf$ a $x$, es decir, dado un pto cualquiera $x$ es el área que hay bajo la curva hasta ese momento.
+
+Para cualquier densidad $f$ es una v.a. continua.
+
+Diremos entonces que $f$ es la función de densidad de $X$.
+
+A partir de ahora, considerareos solamente las v.a. $X$ continuas que tienen función de densidad.
+
+
+## 3. Esperanza
+
+**Esperanza de una v.a. continua.** Sea $X$ v.a. continua con densidad $f_X$. La esperanza de $X$ es: $$E(X)=\int_{-\infty}^{+\infty}x\cdot f_X(x)dx$$
+
+Si el dominio $D_X$ de $X$ es un intervalo de extremos $a<b$, entonces (se integra desde a hasta b): $$E(X)=\int_a^b x\cdot f_X(x)dx$$
+
+Sea $g:D_X\longrightarrow \mathbb{R}$ una función continua (función g(x)). Entonces:
+
+$$E(g(X)) = \int_{-\infty}^{+\infty}g(x)\cdot f_X(x)dx$$
+
+Si el dominio $D_X$ de $X$ es un intervalo de extremos $a<b$, entonces: $$E(g(X))=\int_a^b g(x)\cdot f_X(x)dx$$
+
+## 4. Varianza
+
+**Varianza de una v.a. continua.** Se define como en el caso de la variable aleatoria discreta: $$Var(X)=E((X-E(X))^2)$$
+
+Y se puede demostrar que:
+
+$$Var(X)=E(X^2)-(E(X))^2$$
+
+## 5. Desviación típica
+
+**Desviación típica de una v.a. continua.** Como en el caso discreto: $$\sigma = \sqrt{Var(X)}$$
+
+# 6. Distribuciones continuas más conocidas
+
+- [Uniforme](https://es.wikipedia.org/wiki/Distribución_uniforme_continua)
+- [Exponencial](https://es.wikipedia.org/wiki/Distribución_exponencial)
+- [Normal](https://es.wikipedia.org/wiki/Distribución_normal)
+- [Chi cuadrado](https://es.wikipedia.org/wiki/Distribución_χ²)
+- [t de Student](https://es.wikipedia.org/wiki/Distribución_t_de_Student)
+- [F de Fisher](https://es.wikipedia.org/wiki/Distribución_F)

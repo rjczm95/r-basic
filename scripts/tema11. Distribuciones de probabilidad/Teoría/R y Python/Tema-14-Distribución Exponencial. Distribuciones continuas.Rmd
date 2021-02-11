@@ -1,0 +1,125 @@
+---
+title: "Introducción a distribuciones de probabilidad"
+author: "Ramon Ceballos"
+date: "8/2/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# **Distribución Exponencial**
+
+## 1. Conceptos teóricos y matemáticos
+
+Una v.a. continua $X$ tiene distribución exponencial de parámetro $\lambda$, **$X\sim\text{Exp}(\lambda)$**, si su función de densidad es: $$f_X(x)=\left\{
+\begin{array}{rl}
+     0 & \text{si }  x\le 0
+  \\ \lambda\cdot e^{-\lambda x} & \text{si }x>0
+\end{array}
+\right.$$
+
+Al tener el exponente negativo, la función tenderá a ir bajando el valor su función de densidad (f(x)).
+
+**Teorema**. Si tenemos un proceso de *Poisson* de parámetro $\lambda$ por unidad de tiempo, el tiempo que pasa entre dos sucesos consecutivos es una v.a. continua exponencial de parámetro lamba(**$\text{Exp}(\lambda)$**).
+
+**Propiedad de la pérdida de memoria.** Si $X$ es v.a. $\text{Exp}(\lambda)$, entonces: $$p(X>s+t\ :\ X>s)=p(X>t)\ \forall s,t>0$$
+
+Esto significa que si ya llevamos esperando ese tiempo (`s` en min. o seg.) y tenemos que esperar `t` (seg. o min.) más, la probabilidad (función de densidad) es la misma que si solo tuviesemos que esperar la unidad de tiempo `t`.
+
+Vamos a definir algunas de las propiedades que tendrá una distribución
+Exponencial.
+
+- El **dominio** de $X$ será $D_X = [0,\infty)$.
+
+- La **función de distribución** vendrá dada por: $$F_X(x)=\left\{
+\begin{array}{rl}
+    0 & \text{si } x\le 0
+  \\ 1-e^{-\lambda x} & \text{si } x>0
+\end{array}
+\right.$$
+
+- **Esperanza** $E(X) = \frac{1}{\lambda}$
+
+- **Varianza** $Var(X) = \frac{1}{\lambda^2}$
+
+
+```{r, fig.align='center',fig.width=10}
+par(mfrow = c(1,2))
+
+#Función de densidad
+plot(0:20, dexp(0:20,0.2),
+     col = "purple", 
+     xlab = "", ylab = "", 
+     main = "Función de densidad de una Exp(0.2)", 
+     type = "o")
+
+#Función de distribución
+plot(0:20, pexp(0:20,0.2),
+     col = "purple", 
+     xlab = "", ylab = "", 
+     main = "Función de distribución de una Exp(0.2)", 
+     type = "o", 
+     ylim = c(0,1))
+
+par(mfrow = c(1,1))
+```
+
+Ejemplos: el tiempo que pasa entre la llegada de un bus y otro en una parada de bus.
+
+## 2. Distribución Exponencial en `R` y `Python`
+
+El código de la distribución Exponencial:
+
+- En **`R`** tenemos las funciones del paquete `stats`: **`dexp(x, rate), pexp(q, rate), qexp(p, rate), rexp(n,  rate)`** donde `rate`$=\lambda$ es el tiempo entre dos sucesos consecutivos de la distribución.
+- En **`Python`** tenemos las funciones del paquete **`scipy.stats.expon`**: **`pdf(k, scale), cdf(k, scale), ppf(q, scale), rvs(n, scaler)`** donde `scale`$=1/\lambda$ es la inversa del tiempo entre dos sucesos consecutivos de la distribución.
+
+
+## 3. Ejemplos en código para la distribución Exponencial (R y Python)
+
+Empleamos una lambda de 3, que represento 3 minutos en una parada de metro.
+
+#### **Ejemplo en R**
+
+Empleamos las funciones anteriores.
+
+```{r, fig.align='center'}
+#defino la lambda
+lam = 3
+
+#determino los valores de "x"
+x = seq(0,3,length=1000)
+
+#Función de densidad
+plot(x, dexp(x, rate=lam), col="red",
+     title("Función de densidad para una distr. exponencial"))
+
+#Función de distribución
+plot(x, pexp(x, rate = lam), 
+     col="blue",
+     title("Función de distribución para una distr. exponencial"))
+
+#La mediana
+qexp(0.5, rate=lam)
+
+#Crear nºs aleatorios y hacer el histograma
+rvs_exp = rexp(100000, rate=lam)
+hist(rvs_exp, col = "blue",
+     main="Histograma de datos aleatorios de distr. exponencial")
+
+```
+
+
+
+
+#### **Ejemplo en Python**
+
+Vete al script de Python del presente tema 14.
+
+
+
+

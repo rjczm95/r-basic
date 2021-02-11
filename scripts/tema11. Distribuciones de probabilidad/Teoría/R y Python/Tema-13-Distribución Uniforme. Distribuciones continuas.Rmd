@@ -1,0 +1,119 @@
+---
+title: "Introducción a distribuciones de probabilidad"
+author: "Ramon Ceballos"
+date: "8/2/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# **Distribución Uniforme**
+
+## 1. Conceptos teóricos y matemáticos
+
+Una v.a. continua **$X$** tiene distribución uniforme sobre el intervalo real $[a,b]$ con $a<b$, **$X\sim\text{U}(a,b)$** si su función de densidad es: $$f_X(x)=\left\{
+\begin{array}{rl}
+     \frac{1}{b-a} & \text{si } a\le x\le b
+  \\ 0 & \text{en cualquier otro caso}
+\end{array}
+\right.$$
+
+Modela el elegir un elemento del intervalo $[a,b]$ de manera equiprobable.
+
+Vamos a definir algunas de las propiedades que tendrá una distribución
+Uniforme.
+
+- El **dominio** de $X$ será $D_X = [a,b]$.
+
+- La **función de distribución** vendrá dada por: $$F_X(x)=\left\{
+\begin{array}{rl}
+    0 & \text{si } x<a
+  \\ \frac{x-a}{b-a} & \text{si } a\le x< b
+  \\ 1 & \text{si } x\ge b
+\end{array}
+\right.$$
+
+- **Esperanza** $E(X) = \frac{a+b}{2}$
+
+- **Varianza** $Var(X) = \frac{(b-a)^2}{12}$
+
+```{r, fig.align='center',fig.width=14}
+par(mfrow=c(1,2))
+
+#•Función de densidad
+plot(c(0,1,1:4,4,5), 
+     c(0,0,dunif(1:4,min = 1, max = 4),0,0),
+     col = "purple", 
+     xlab = "", ylab = "", 
+     main = "Función de densidad de una U(1,4)", 
+     type = "o", 
+     ylim = c(0,1))
+
+#Función de distribución
+plot(0:5, 
+     punif(0:5,min = 1, max = 4),
+     col = "purple", 
+     xlab = "", ylab = "", 
+     main = "Función de distribución de una U(1,4)", 
+     type = "o")
+
+par(mfrow=c(1,1))
+```
+
+
+## 2. Distribución Uniforme en `R` y `Python`
+
+El código de la distribución Uniforme:
+
+- En **`R`** tenemos las funciones del paquete **`stats`**: **`dunif(x, min, max), punif(q, min, max), qunif(p, min, max), runif(n,  min, max)`** donde `min` y `max` són los extremos de los intervalos de la distribución uniforme.
+
+- En **`Python`** tenemos las funciones del paquete **`scipy.stats.uniform`**: **`pdf(k,loc, scale), cdf(k,loc, scale), ppf(q,loc, scale), rvs(n,loc, scaler)`** donde la distribución uniforme está definida en el intervalo `[loc, loc+scale]` **Cuidado**: `scale` es la amplitud del intervalo.
+
+
+## 3. Ejemplos en código para la distribución Uniforme (R y Python)
+
+Supongamos que $X\sim U([0,1])$ entonces podemos estudiar sus parámetros.
+
+#### **Ejemplo en R**
+
+Empleamos las funciones anteriores.
+
+```{r,fig.align='center',fig.width=10}
+
+#Definimos el primer punto (a) y el útimo (b)
+a = 0
+b = 1
+
+#Generamos los valores para el eje "x"
+x = seq(-0.1, 1.1, 0.1)
+
+#Función de densidad
+plot(x, dunif(x, min = a, max = b),
+     title("Función de densidad para una distr. uniforme"))
+
+#Función de distribución
+plot (x, punif(x, a, b), type = "l")
+
+#La mediana
+qunif(0.5, a, b)
+
+#Generamos datos aleatorios seún la distribución uniforme
+#Los representamos en un histograma
+runif(1000000, a, b) -> data
+hist(data,
+     main = "Histograma de datos aleatorios \n generados con una distribución uniforme")
+
+
+```
+
+
+
+
+#### **Ejemplo en Python**
+
+Vete al script de Python del presente tema 13.

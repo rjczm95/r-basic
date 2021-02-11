@@ -1,0 +1,87 @@
+---
+title: "Introducción a distribuciones de probabilidad"
+author: "Ramon Ceballos"
+date: "6/2/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# **Conceptos básicos en Probabilidad**
+
+Hay una serie de conceptos que hemos de conocer en el mundo de la probabilidad.
+
+**Experimento aleatorio**. Experimento que efectuado en las mismas condiciones puede dar lugar a resultados diferentes.
+
+**Suceso elemental**. Cada uno de los posibles resultados del experimento aleatorio.
+
+**Espacio muestral**. Conjunto **$\Omega$** formado por todos los sucesos elementales del experimento aleatorio.
+
+### *EJEMPLOS*
+
+Lanzar una moneda es un experimento aleatorio.
+
+Los sucesos elementales son: sacar cara ($C$) y sacar cruz ($+$).
+
+El espacio muestral de este experimento aleatorio es $\Omega = \{C,+\}$.
+
+## 1. Sucesos
+
+Dentro de este apartado hemos de conocer los siguientes conceptos.
+
+**Suceso**. Subconjunto del espacio muestral.
+
+**Suceso total o seguro** ($\Omega$). Es todo el espacio muestral.
+
+**Suceso vacío o imposible** ($\emptyset$). No tiene ninguna conjunto del espacio muestral.
+
+**Operaciones con sucesos**. Sean $A,B\subseteq \Omega$ sucesos. Entonces:
+
+- $A\cup B$ es el suceso unión (resultados que pertenecen a $A$, o a $B$, o a ambos).
+- $A\cap B$ es el suceso intersección (resultados que pertenecen a $A$ y $B$, a la vez).
+- $A^c$ es el suceso complementario (resultados que no pertenecen a $A$).
+- $A-B = A\cap B^c$ es el suceso diferencia (resultados que pertenecen a $A$ pero no a $B$). No es simétrica.
+
+**Sucesos incompatibles**. Si $A\cap B = \emptyset$. Si la instersección de A y B da lugar a un suceso imposible o vacío.
+
+### *EJEMPLOS*
+
+Lanzar un dado es un experimento aleatorio.
+
+Algunos sucesos podrían ser: sacar número par ($\{2,4,6\}$), sacar mayor que 4 ($\{5,6\}$), sacar número múltiplo de 3 ($\{3,6\}$)...
+
+El suceso total de este experimento aleatorio es $\Omega = \{1,2,3,4,5,6\}$.
+
+Un ejemplo de suceso imposible de este experimento aleatorio es $\emptyset = \{7\}$ (sacar 7).
+
+
+## 2. Probabilidad
+
+**Probabilidad de un suceso**. Número entre 0 y 1 (ambos incluidos) que mide la expectativa de que se dé este suceso.
+
+**Probabilidad**. Sea $\Omega$ el espacio muestral de un experimento aleatorio. Suponiendo que $\Omega$ es **finito**, una probabilidad sobre $\Omega$ es una aplicación: $$p: \mathcal{P}(\Omega)\longrightarrow [0,1]$$ 
+
+Esto satisface, siendo A parte o subconjunto del espacio muestral, lo siguiente:
+
+- $0\le p(A)\le 1 \ \forall A\in\mathcal{P}(\Omega)$
+- $p(\Omega) = 1$
+- Si $\{A_1,\dots,A_n\}$ son sucesos incompatibles dos a dos ($A_i\cap A_j=\emptyset \ \forall i\ne j$), entonces: $$p(A_1\cup\cdots \cup A_n)=p(A_1)+\cdots+p(A_n)$$
+
+**Notación**: Si $a\in\Omega$, escribiremos $p(a)$ en vez de $p(\{a\})$.
+
+En este caso, "a" es un único elemento dentro del espacio muestral.
+
+
+### *EJEMPLOS*
+
+- La probabilidad de sacar un 6 al lanzar un dado estándar no trucado es $\frac{1}{6}$.
+- La probabilidad de sacar un 6 al lanzar un dado de 4 caras es $0$.
+- La probabilidad de sacar un 6 al lanzar un dado de 20 caras es $\frac{1}{20}$.
+
+
+

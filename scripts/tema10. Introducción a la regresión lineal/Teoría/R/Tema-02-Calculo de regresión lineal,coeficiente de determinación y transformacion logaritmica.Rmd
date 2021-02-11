@@ -1,0 +1,132 @@
+---
+title: "Introducción a la regresión lineal"
+author: "Ramon Ceballos"
+date: "6/2/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 1. Cálculo de una recta de regresión lineal
+
+## 1.1 Planteamiento del problema
+
+Como ya hemos dicho, el objetivo de este tema es estudiar si existe relación lineal entre las variables dependiente e independiente.
+
+Por lo general, cuando tenemos una serie de observaciones emparejadas, $(x_i,y_i)_{i=1,\dots,n}$, la forma natural de almacenarlas en R es mediante una tabla de datos, con dos columnas (una para "x" y otra para "y"). Y la que más conocemos nostros es el data frame.
+
+Como recordaréis de temas anteriores, la ventaja de trabajar con este tipo de organización de datos es que luego se pueden hacer muchas cosas.
+
+## 1.2 Ejemplo para el cálculo
+
+### 1.2.1 **Análisis exploratorio de los datos de estudio**
+
+En este ejemplo, nosotros haremos uso del siguiente data frame:
+
+```{r}
+body = read.table("../../../../data/bodyfat.txt", header = TRUE)
+head(body,3)
+```
+
+Más concretamente, trabajaremos con las variables **`Fat`** y **`Weight`**.
+
+```{r}
+#seleccionamos las columnas Fat y Weight
+body2 = body[,c(2,4)]
+
+#Cambiamos los nombres de las columnas
+names(body2) = c("Grasa","Peso")
+
+#Observamos la estructura
+str(body2)
+head(body2,3)
+```
+
+Al analizar datos, siempre es recomendable empezar con una representación gráfica que nos permita hacernos a la idea de lo que tenemos.
+
+Esto se consigue haciendo uso de la función **`plot`**, que ya hemos estudiado en detalle en lecciones anteriores. No obstante, para lo que necesitamos en este tema nos conformamos con un gráfico básico de estos puntos que nos muestre su distribución.
+
+```{r, fig.align='center'}
+#Plot básico de ptos
+plot(body2)
+```
+
+### 1.2.2 **Cálculo de la recta de regresión**
+
+Para calcular la **recta de regresión** con R de la familia de puntos $(x_i,y_i)_{i=1,\dots,n}$, si `x` es el vector $(x_i)_{i=1,\dots,n}$ e `y` es el vector $(y_i)_{i=1,\dots,n}$, entonces, su recta de regresión se calcula mediante la instrucción:
+
+**`lm(y~x)`** (linear model)
+
+**Cuidado con la sintaxis**: primero va el vector de las variables dependientes "y" (lo que se quiere predecir), seguidamente después de una tilde `~`, va el vector de las variables independientes "X".
+
+Esto se debe a que R toma el significado de la tilde como "en función de". Es decir, la interpretación de **`lm(y~x)`** en R es "la recta de regresión de $y$ en función de $x$".
+
+Si los vectores **`y`** y **`x`** son, en este orden, la primera y la segunda columna de un data frame de dos variables, entonces es suficiente aplicar la función **`lm`** al data frame. 
+
+En general, si **`x`** e **`y`** son dos variables de un data frame, para calcular la recta de regresión de **`y`** en función de **`x`** podemos usar la instrucción:
+
+**`lm(y~x, data = data fame)`**
+
+Si la varibale independiente es la grasa y la variable dependiente es el peso, se hace lo siguiente.
+
+```{r}
+#Opción 1
+lm(body2$Peso~body2$Grasa)
+```
+
+```{r}
+#Opción 2 (Mejor opción)
+lm(Peso~Grasa, data = body2)
+```
+
+Como podéis observar, las dos formas de llamar a la función dan exactamente lo mismo. Ninguna es mejor que la otra.
+
+El resultado obtenido en ambos casos significa que la recta de regresión para nuestros datos es:
+$$y = 2.151x+137.738$$
+
+Ahora, podemos superponer esta recta a nuestro gráfico anterior haciendo uso de la función **`abline()`**.
+
+```{r, fig.align='center'}
+#Nube de ptos anterior
+plot(body2)
+
+#Añado la recta de regresión lineal
+abline(lm(Peso~Grasa, data = body2), col = "red")
+```
+
+Hay que tener en cuenta que el análisis llevado a cabo hasta el momento de los pares de valores $(x_i,y_i)_{i=1,\dots,n}$ ha sido puramente descriptivo.
+
+Es decir, hemos mostrado que estos datos son consistentes con una función lineal, pero no hemos demostrado que la variable dependiente sea función aproximadamente lineal de la variable independiente. Esto último necesitaría una demostración matemática, o bien un argumento biológico, pero no basta con una simple comprobación numérica.
+
+Eso sí, podemos utilizar todo lo hecho hasta ahora para predecir valores $\tilde{y}_i$ en función de los $x_i$  resolviendo una simple ecuación lineal.
+
+# 2. Coeficiente de determinación
+
+El **coeficiente de determinación**, $R^2$, nos es útil para evaluar numéricamente si la relación lineal obtenida es significativa o no.
+
+No explicaremos de momento como se define. Eso lo dejamos para curiosidad del usuario. Por el momento, es suficiente con saber que este coeficiente se encuentra en el intervalo $[0,1]$. Si $R^2$ es mayor a 0.9, consideraremos que el ajuste es bueno. De lo contrario, no.
+
+## 2.1 Cálculo del coeficiente de determinación (summary)
+
+La función **`summary`** aplicada a **`lm`** nos muestra los contenidos de este objeto. Entre ellos encontramos **`Multiple R-squared`**, que no es ni más ni menos que el coeficiente de determinación, **$R^2$**.
+
+Para facilitarnos las cosas y ahorrarnos información que, de momento, no nos resulta de interés, podemos aplicar **`summary(lm(...))$r.squared`**.
+
+```{r}
+#todo lo que devuelve summary
+summary(lm(Peso~Grasa, data = body2))
+```
+
+```{r}
+#valor directo del coeficiente
+summary(lm(Peso~Grasa, data = body2))$r.squared
+```
+
+En este caso, hemos obtenido un coeficiente de determinación de 0.3751, cosa que confirma que la recta de regresión no aproxima nada bien nuestros datos. 
+
+

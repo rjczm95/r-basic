@@ -1,0 +1,63 @@
+---
+title: "Introducción a distribuciones de probabilidad"
+author: "Ramon Ceballos"
+date: "10/2/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Otras distribuciones de variables continuas importantes
+
+## 1. Distribución Chi o Khi cuadrado
+
+La distribución **$\chi^2_k$**, donde **$k$** representa los grados de libertad de la misma y que procede de la suma de los cuadrados de **$k$** distribuciones normales estándar ($Z$) independientes:
+
+$$X = Z_1^2 + Z_2^2+\cdots + Z_k^2\sim \chi_k^2$$
+
+Esta distribución aparece mucho en el mundo de la inferencia estadística para las bondades de ajuste.
+
+## 2. Distribución t de Student
+
+La distribución **$t_k$** (con k grados de libertad) surge del problema de estimar la media de una población normalmente distribuida cuando el tamaño de la *muestra es pequeña* y procede del cociente entre una distribución normal($Z$) y la raíz cuadrada de una Chi cuadradado dividida por k ($\sqrt{\frac{\chi^2_k}{k}}$).
+
+$$T = \frac{Z}{\sqrt{\chi^2_k/k}}\sim T_k$$
+
+## 3. Distribución F de Fisher-snedecor
+
+La distribución **$F_{n_1,n_2}$** aparece frecuentemente como la distribución nula de una prueba estadística, especialmente en el análisis de la varianza (anova). La F de Fisher viene definida por dos grados de libertad ($n_1, n_2$) ya que proviene del cociente de 2 Chi cuadrado, tal como aparece en la siguiente expresión:
+
+$$F = \frac{\chi^2_{n_1}/n_1}{\chi^2_{n_2}/n_2}\sim F_{n_1,n_2}$$
+
+## 4. Distribuciones continuas en R
+
+Distribución |  Instrucción en R |  Instrucción en Python |  Parámetros                                
+--------------------|--------------------|--------------------|--------------------
+Uniforme | `unif` | `scipy.stats.uniform` | mínimo y máximo
+Exponencial | `exp` | `scipy.stats.expon` | $\lambda$
+Normal | `norm` | `scipy.stats.normal` | media $\mu$, desviación típica $\sigma$
+Khi cuadrado | `chisq` | `scipy.stats.chi2` | grados de libertad
+t de Student | `t` | `scipy.stats.t` | grados de libertad
+F de Fisher | `f` | `scipy.stats.f` | los dos grados de libertad
+
+En Python:
+ - La Chi cuadrado se define con chi2.
+ - La t de Student se define con una t.
+ - La F de Fisher se define con una f.
+
+## 5. Otras distribuciones conocidas
+
+- Distribución de Pareto (Power Law)
+- Distribución Gamma y Beta
+- Distribución Log Normal
+- Distribución de Weibull
+- Distribución de Cauchy
+- Distribución Exponencial Normal
+- Distribución Von Mises
+- Distribución Rayleigh
+- ...

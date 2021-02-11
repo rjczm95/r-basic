@@ -1,0 +1,110 @@
+---
+title: "Introducción a distribuciones de probabilidad"
+author: "Ramon Ceballos"
+date: "7/2/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# **Distribución Geométrica**
+
+## 1. Conceptos teóricos y matemáticos
+
+Si **$X$** es variable aleatoria que mide el "número de repeticiones independientes del experimento (tipo Bernoulli) hasta haber conseguido el primer éxito", entonces diremos que **$X$** se distribuye como una Geométrica con un solo parámetro **$p$**. Otra forma de definir esta distribución es como el nº de intentos necesarios hasta conseguir éxito. Esta función depende de si se cuenta el nº de intentos o el nº de fracasos hasta obtener el éxito.
+
+$$X\sim \text{Ge}(p)$$
+
+En esta expresión, **$p$** es la probabilidad de éxito y **$q = 1-p$** es la probabilidad de fracaso.
+
+Ejemplos de este tipo de distribuciones es cuando un borracho prueba a abrir la puerta de su casa teninedo un manojo de $n$ llaves distintas, o la probabilidad de tener un hijo en función de los intentos($n$ intentos).
+
+Vamos a definir algunas de las propiedades que tendrá una distribución
+Geométrica.
+
+- El **dominio** de $X$ será $D_X= \{0,1,2,\dots\}$ (si contamos el nº de fracasos hasta obtener el primer éxito, por ello se incluye el 0) o bien $D_X = \{1,2,\dots\}$ (aquí se cuentan el nº de intentos de ahí que se empiece por 1) en función de si empieza en 0 o en 1, respectivamente.
+
+- La **función de probabilidad** vendrá dada por: $$f(k) = (1-p)^{k}p \qquad\text{ si empieza en 0}$$
+$$f(k) = (1-p)^{k-1}p \qquad\text{ si empieza en 1}$$
+
+- La **función de distribución** vendrá dada por: $$F(x) = \left\{
+\begin{array}{cl}
+     0 & \text{si } x<0 
+  \\ 1-(1-p)^{k+1} & \text{si } k\le x<k+1,\ k\in\mathbb{N}
+\end{array}
+\right.$$ 
+
+En este caso, dependerá de si se cuenta el nº de intentos o de fracasos. Cuando $k$ tiende a infinito la probabilidad va bajando paulatinamente.
+
+- **Esperanza**. $E(X) = \frac{1-p}{p}$ si empieza en 0 y E$(X) = \frac{1}{p}$ si empieza en 1.
+
+- **Varianza**. $Var(X) = \frac{1-p}{p^2}$
+
+- **Propiedad de la falta de memoria**. Si $X$ es una v.a. $\text{Ge}(p)$, entonces: $$p\{X\ge m+n:\ X\ge n\} = p\{X\ge m\}\ \forall m,n=0,1,\dots$$
+
+En este caso, la probabilidad de éxito es independiente del nº de intentos.
+
+
+```{r, fig.align='center',fig.width=10}
+par(mfrow = c(1,2))
+plot(0:20, dgeom(0:20,0.5),col = "purple", xlab = "", ylab = "", main = "Función de probabilidad de una Ge(0.5)")
+plot(0:20, pgeom(0:20,0.5),col = "purple", xlab = "", ylab = "", main = "Función de distribución de una Ge(0.5)", ylim = c(0,1))
+par(mfrow= c(1,1))
+```
+
+## 2. Distribución Geométrica en `R` y `Python`
+
+El código de la distribución Geométrica:
+
+- En **`R`** tenemos las funciones del paquete `Rlab`: **`dgeom(x, prob), pgeom(q, prob), qgeom(p, prob), rgeom(n, prob)`** donde `prob` es la probabilidad de éxito  del experimento.
+- En **`Python`** tenemos las funciones del paquete **`scipy.stats.geom`**: `pmf(k,p), cdf(k,p), ppf(q,p), rvs(p, size)` donde `p` es la probabilidad de éxito del experimento.
+
+
+## 3. Ejemplos en código para la distribución Geométrica (R y Python)
+
+Si el borracho tuviera 10 llaves entonces para modelizar la distribución geométrica la probabilidad debería de ser de 0.1.
+
+Sea $X=Geom(p=0.1)$ la distribución que modela la probabilidad de intentar abrir una puerta hasta conseguirlo. En este caso la función de probabilidad del nº de intentos sería:
+
+$$f(k) = (1-p)^{k-1}p$$
+
+#### **Ejemplo en R**
+
+Empleamos las funciones anteriores.
+
+```{r, fig.align='center', fig.width=9}
+library(Rlab)
+
+#defino la proabilidad
+p = 0.1
+
+#Función de probabilidad para 20 intentos
+plot(0:20, dgeom(0:20, p),
+     title("Plot de función de probabilidad \n para una distribución geonétrica"))
+
+#Función de distribución para 20 intentos
+plot(0:20, pgeom(0:20, p), 
+     ylim = c(0,1), #Acaba en 1 siempre
+     title("Plot de función de distribución \n para una distribución geonétrica"))
+
+#La mediana
+qgeom(0.5, p)
+
+#El cuantil 0.75
+qgeom(0.75, p)
+
+#Valores aleatorios generados con rgeom
+#Representación en histograma
+hist(rgeom(10000, p),
+     main = "Histograma de la función de probabilidad de una geométrica")
+```
+
+
+#### **Ejemplo en Python**
+
+Vete al script de Python del presente tema 7.

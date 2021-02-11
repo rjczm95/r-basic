@@ -1,0 +1,60 @@
+---
+title: "Ejercicio - Vuelos del aeropuerto de New York"
+author: "Ramon Ceballos"
+date: "11/2/2021"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(reticulate)
+```
+
+# **Vuelos del Aeropuerto de Nueva York**
+
+Instalamos el paquete "nycflight13" para poder trabajar en el ejecicio. Son datos de R. Cargamos los datos de la columna "flights".
+
+```{r}
+#Tomamos de la librería "nycflights13" únicamente la columna "flights" que hace referencia a los vuelos.
+data <- nycflights13::flights
+head(data,4)
+nrow(data) #nº de vuelos en el datframe
+summary(data)
+```
+
+Accedemos a los datos importados en R con Python.
+
+Filtro los datos para los destinos al aeropuerto ORD (Orlando). Luego se seleccionan las columnas carrier, dep_delay (retraso salida) y arr_delay(retraso llegada). Finalmente elimino las filas que tengan NA.
+
+```{python}
+pydata = r.data
+pydata = pydata[pydata["dest"] == "ORD"]
+pydata = pydata [["carrier","dep_delay","arr_delay", "origin"]]
+pydata = pydata[pydata["arr_delay"] < 6*60]
+pydata = pydata.dropna()
+print(pydata.head())
+print(pydata.shape) 
+```
+
+Ahora puedo volver a R y ver los estadístico con summary.
+
+```{r}
+summary(py$pydata)
+boxplot(arr_delay~origin, 
+        data = py$pydata,
+        main = "Retraso de los vuelos hacia Orlando desde NYC")
+```
+
+
+
+
+
+
+
+
+
+
+

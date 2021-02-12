@@ -97,9 +97,9 @@ skewed_data = pd.DataFrame(np.random.exponential(size=10000))
 
 skewed_data.plot(kind="density", figsize=(7,7))
 
-plt.vlines(skewed_data.mean(), ymin=0, ymax=1, linewidth=6.0, color="green")
+plt.vlines(skewed_data.mean(), ymin=0, ymax=0.7, linewidth=6.0, color="green")
 
-plt.vlines(skewed_data.median(), ymin=0, ymax=1, linewidth=2.0, color="red")
+plt.vlines(skewed_data.median(), ymin=0, ymax=0.7, linewidth=2.0, color="red")
 
 plt.xlim(-2,5)
 
@@ -118,11 +118,11 @@ combined_data = pd.DataFrame(np.concatenate((norm_data,outliers),axis=0))
 
 combined_data.plot(kind="density", figsize=(7,7))
 
-plt.vlines(combined_data.mean(), ymin=0, ymax=0.3, linewidth=6.0, color="green")
+plt.vlines(combined_data.mean(), ymin=0, ymax=0.23, linewidth=6.0, color="green")
 
-plt.vlines(combined_data.median(), ymin=0, ymax=0.3, linewidth=2.0, color="red")
+plt.vlines(combined_data.median(), ymin=0, ymax=0.23, linewidth=2.0, color="red")
 
-plt.xlim(-5,20)
+plt.xlim(-10,20)
 
 plt.show()
 ```
@@ -138,11 +138,11 @@ data_mpg.plot(kind="density", title="Distribucion para las millas por galon")
 
 plt.vlines(data_mpg.mean(),
 color="green", linewidth=6,
-ymin=0, ymax=0.1)
+ymin=0, ymax=0.07)
 
 plt.vlines(data_mpg.median(),
 color="red", linewidth=2,
-ymin=0, ymax=0.1)
+ymin=0, ymax=0.07)
 
 plt.show()
 ```
@@ -167,7 +167,165 @@ ymin=0, ymax=0.006)
 plt.show()
 ```
 
-Tambié presenta un sesgo positivo la distribución de la variable de la potencia.
+También presenta un sesgo positivo la distribución de la variable de la potencia.
+
+
+## 4. Medidas de dispersión
+
+Estos estadísticos permiten estudiar la variación (diversidad) de los datos, mientras que las medidas de centralización dan una idea del valor más típico.
+
+La dispersión se puede medir a través del **rango**. En este caso lo hacemos para las millas por galón.
+
+```{python}
+rang = max(data["mpg"])-min(data["mpg"])
+print(rang)
+```
+
+Para poder describir la disepersión de una variable se emplean cinco percentiles distintos (five nums) que son: **mínmo, primer cuartil, mediana, tercer cuartil y el máximo**.
+
+```{python}
+five_nums = [data["mpg"].quantile(0),
+         data["mpg"].quantile(0.25),
+         data["mpg"].quantile(0.5),
+         data["mpg"].quantile(0.75),
+         data["mpg"].quantile(1)]
+
+print(five_nums)
+```
+
+Estos five nums aparecen al emplear la función describe() sobre la variable de estudio.
+
+```{python}
+print(data["mpg"].describe())
+```
+
+Para obtener el rango intercuartílico (IQR), se hace lo siguiente:
+
+```{python}
+rang_int = data["mpg"].quantile(0.75)-data["mpg"].quantile(0.25)
+print(rang_int)
+```
+
+Ahora vamos a representar graficamente los datos estadísticos de medidas de dispersión.
+
+Empleamos un boxplot. Vamos a colocar cinco textos para diversos estadísticos.
+
+```{python}
+plt.clf()
+
+data.boxplot(column = "mpg", return_type="axes",
+figsize=(5,5))
+
+plt.text(0.7, y = data["mpg"].quantile(0.25),
+s = "Primer cuartil")
+
+plt.text(0.75, y = data["mpg"].quantile(0.5),
+s = "Mediana")
+
+plt.text(0.7, y = data["mpg"].quantile(0.75),
+s = "Tercer cuartil")
+
+plt.text(0.85, y = data["mpg"].quantile(0),
+s = "Minimo")
+
+plt.text(0.85, y = data["mpg"].quantile(1),
+s = "Maximo")
+
+plt.text(x=0.65, y=data["mpg"].quantile(0.5),
+s="IQR", rotation=90,
+size=20)
+
+plt.show()
+```
+
+La **varianza y la desviación típica** son los estadísticos estrellas para determinar la dispersión de una variable.
+
+```{python}
+print(data["mpg"].var())
+
+print(data["mpg"].std())
+```
+
+Tanto la varianza como la desviación estándar son valores que proceden de la media, y esto significa que son medidas estadísticas muy influenciables a través de la curtosis y el sesgo de una distribución.
+
+Debido a esto existe una tercera medida para el estudio de la dispersión de los datos. Es la **desviación mediana absoluta** (mad).
+
+Para el cálculo de "mad" se resta cada valor contenido en la variable su mediana, dando el valor final en valor absoluto. Después se multiplica por el parámetro **k** que vale 1.4826. Este valor es más resistente a los outliers.
+
+```{python}
+mad = abs(data["mpg"]-data["mpg"].median())
+
+k = 1.4826
+
+print(mad.median()*k)
+```
+
+
+## 5. Medidas de forma de la distribución
+
+En este apartado nos interesan dos estadísticos: el **sesgo** de la distribución y el coeficiente de **curtosis**.
+
+El sesgo da información acerca de la simetría de la distribución, mientras que la curtosis da información sobre lo picuda que es la distribución (). Este coeficiente de curtosis indica la cantidad de datos que hay cercanos a la media, de manera que a mayor grado de curtosis, más escarpada (o apuntada) será la forma de la curva.
+
+Son estadístico que nos da una idea de como se distribuyen los datos a lo largo de la distribución.
+
+Para calcular el sesgo se emplea: ".skew()" en python.
+
+Para calcular la curtosis se emplea: ".kurt()" en python.
+
+```{python}
+print(data["mpg"].skew())
+print(data["mpg"].kurt())
+```
+
+Se observa que el sesgo es ligeramente positivo, los datos están tirando hacia la derecha. Mientras, la curtosis está cercana a cero por lo que no existe un alto grado de escarpamiento para la curva (poco pincho).
+
+Ahora vamos a crear datos en base a distintas distribuciones y las vamos a representar, para también calcularle la curtosis y el sesgo.
+
+```{python}
+norm =np.random.normal(size = 100000)
+
+skew_data = np.concatenate((np.random.normal(size=35000)+2,np.random.exponential(size=65000)), axis=0)
+
+unif = np.random.uniform(-2,2,size = 100000)
+
+peak = np.concatenate((np.random.exponential(size=50000),
+np.random.exponential(size=50000)*(-1)),
+axis = 0)
+
+data = pd.DataFrame({
+"normal":norm,
+"skew":skew_data,
+"unif":unif,
+"peak":peak
+})
+
+
+plt.clf()
+data.plot(kind="density", figsize=(7,7),xlim= (-5,5))
+
+plt.show()
+
+print("Normal, Sesgo = %f, Curtosis = %f" %(data["normal"].skew(), data["normal"].kurt()))
+
+print("Normal+Exp, Sesgo = %f, Curtosis = %f" %(data["skew"].skew(), data["skew"].kurt()))
+
+print("Uniforme, Sesgo = %f, Curtosis = %f" %(data["unif"].skew(), data["unif"].kurt()))
+
+print("Suma de exponenciales, Sesgo = %f, Curtosis = %f" %(data["peak"].skew(), data["peak"].kurt()))
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
